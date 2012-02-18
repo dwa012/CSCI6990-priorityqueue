@@ -10,11 +10,13 @@ all: run
 hello: run.o priority_queue.o
 	$(CC) priority_queue.o run.o -o run
 
+priority_queue.o: priority_queue.c
+	$(CC) $(CFLAGS) priority_queue.c
+
 run.o: run.c
 	$(CC) $(CFLAGS) run.c
 
-priority_queue.o: priority_queue.c
-	$(CC) $(CFLAGS) priority_queue.c
+
 
 #clean:
 #	rm -rf *o hello
