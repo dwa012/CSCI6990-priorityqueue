@@ -15,19 +15,32 @@
  /******************************************************
   * Creates a new priority queue to be used. 
   * 
-  * Will attempt to create a new priority queue.
   * If the queue is created successfully a token will
   * be returned. This token will need to be presented
   * when any queue operations are to be requested.
   *
-  * If a new priority queue
+  * If a new priority queue cannot be created then
+  * error will be produced.
   ******************************************************/
  int create_queue();
  
+ /******************************************************
+  * Deletes a queue
+  * 
+  * Will attempt to delete the queue represented by the
+  * given token.
+  * 
+  ******************************************************/
  int delete_queue(int token);
  
+ /******************************************************
+  * 
+  ******************************************************/
  int enqueue(int item, int token);
  
+ /******************************************************
+  * 
+  ******************************************************/
  int dequeue(int item, int token);
  
  
