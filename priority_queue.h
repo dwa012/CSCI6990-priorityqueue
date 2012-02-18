@@ -12,7 +12,6 @@
  //of primitive typedef changes
  typedef struct ticket_struct QUEUE_TICKET;
  
- //maybe use a struct for the tokens for queues
  //need to make some kind of error messages to be checked for
  //
  
