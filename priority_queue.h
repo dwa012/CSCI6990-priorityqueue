@@ -13,10 +13,12 @@
  //typedef struct ticket_struct QUEUE_TICKET;
  //struct TB;
  
+ //STRUCTS
  typedef int QUEUE_TICKET;
  typedef int QUEUE_ERROR;
  typedef int PRIORITY;
  
+ //USED TO STORE QUEUE ELEMENTS
  typedef struct queue_element_struct {
  	int item;
  	PRIORITY priority;
