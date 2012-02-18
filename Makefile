@@ -11,10 +11,11 @@ run: run.o priority_queue.o
 	$(CC) run.o priority_queue.o -o run
 	
 run.o: run.c
-	$(CC) $(CFLAGS) run.c
+	$(CC) $(CFLAGS) run.c priority_queue.h
 	
-priority_queue.o: priority_queue.c
+priority_queue.o: priority_queue.c priority_queue.h
 	$(CC) $(CFLAGS) priority_queue.c
 
-#clean:
-#	rm -rf *o hello
+clean:
+	rm -rf *o hello
+	
