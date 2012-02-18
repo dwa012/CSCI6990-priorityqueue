@@ -16,9 +16,5 @@ run.o: run.c
 priority_queue.o: priority_queue.c
 	$(CC) $(CFLAGS) priority_queue.c
 
-
-
-
-
 #clean:
 #	rm -rf *o hello
