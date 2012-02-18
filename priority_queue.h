@@ -11,6 +11,8 @@
  enum ERRORS {CREATION_FAILED,DELETION_FAILED};
  
  //maybe use a struct for the tokens for queues
+ //need to make some kind of error messages to be checked for
+ //
  
  /******************************************************
   * Creates a new priority queue to be used. 
@@ -19,8 +21,8 @@
   * be returned. This token will need to be presented
   * when any queue operations are to be requested.
   *
-  * If a new priority queue cannot be created then
-  * error will be produced.
+  * If a new priority queue cannot be created then a
+  * error will be returned.
   ******************************************************/
  int create_queue();
  
@@ -35,6 +37,8 @@
  
  /******************************************************
   * 
+  *
+  *
   ******************************************************/
  int enqueue(int item, int token);
  
