@@ -8,8 +8,9 @@
  #ifndef STORMO_WARD_PRIORITY_QUEUE
  #define STORMO_WARD_PRIORITY_QUEUE
  
- //probably not very good to use enums
- enum ERRORS {CREATION_FAILED,DELETION_FAILED};
+ //used a struct to prevent changeing of
+ //of primitive typedef changes
+ typedef struct ticket_struct QUEUE_TICKET;
  
  //maybe use a struct for the tokens for queues
  //need to make some kind of error messages to be checked for
@@ -25,7 +26,7 @@
   * If a new priority queue cannot be created then a
   * error will be returned.
   ******************************************************/
- int create_queue();
+ QUEUE_TICKET create_queue();
  
  /******************************************************
   * Deletes a queue
@@ -34,19 +35,24 @@
   * given token.
   * 
   ******************************************************/
- int delete_queue(int token);
+ int delete_queue(QUEUE_TICKET token);
  
  /******************************************************
   * 
   *
   *
   ******************************************************/
- int enqueue(int item, int token);
+ int enqueue(int item, int priority, QUEUE_TICKET token);
  
  /******************************************************
   * 
   ******************************************************/
- int dequeue(int item, int token);
+ int dequeue(int item, QUEUE_TICKET token);
+ 
+ /******************************************************
+  * 
+  ******************************************************/
+ int dequeue(int item, QUEUE_TICKET token);
  
  
-#endif STORMO_WARD_PRIORITY_QUEUE
+#endif //STORMO_WARD_PRIORITY_QUEUE
