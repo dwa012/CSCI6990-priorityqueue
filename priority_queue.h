@@ -8,6 +8,7 @@
  #ifndef STORMO_WARD_PRIORITY_QUEUE
  #define STORMO_WARD_PRIORITY_QUEUE
  
+ //probably not very good to use enums
  enum ERRORS {CREATION_FAILED,DELETION_FAILED};
  
  //maybe use a struct for the tokens for queues
