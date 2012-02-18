@@ -17,5 +17,5 @@ priority_queue.o: priority_queue.c priority_queue.h
 	$(CC) $(CFLAGS) priority_queue.c
 
 clean:
-	rm -rf *o hello
+	rm -rf *o
 	
