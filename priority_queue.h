@@ -13,7 +13,7 @@
  //typedef struct ticket_struct QUEUE_TICKET;
  //struct TB;
  
- typedef int long QUEUE_TICKET;
+ typedef int QUEUE_TICKET;
  
  //need to make some kind of error messages to be checked for
  //
