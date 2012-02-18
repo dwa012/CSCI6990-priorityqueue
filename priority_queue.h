@@ -14,6 +14,7 @@
  //struct TB;
  
  typedef int QUEUE_TICKET;
+ typedef int QUEUE_ERROR;
  
  //need to make some kind of error messages to be checked for
  //
@@ -52,9 +53,9 @@
  int dequeue(int item, QUEUE_TICKET token);
  
  /******************************************************
-  * 
+  * Get the error of the last action if any.
   ******************************************************/
- int dequeue(int item, QUEUE_TICKET token);
+ int GET_ERROR(QUEUE_TICKET token);
  
  
 #endif //STORMO_WARD_PRIORITY_QUEUE
