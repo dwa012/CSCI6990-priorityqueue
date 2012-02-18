@@ -8,7 +8,7 @@ CFLAGS=-std=c99 -c -Wall
 all: run
 
 hello: run.o priority_queue.o
-	$(CC) run.o priority_queue.o -o run
+	$(CC) priority_queue.o run.o -o run
 
 run.o: run.c
 	$(CC) $(CFLAGS) run.c
