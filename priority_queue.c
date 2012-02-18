@@ -10,4 +10,6 @@
 
 QUEUE_TICKET create(){
 	printf("size f %d \n",QUEUE_FULL);
+	
+	return 0;
 }

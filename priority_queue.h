@@ -17,6 +17,11 @@
  typedef int QUEUE_ERROR;
  typedef int PRIORITY;
  
+ typedef struct queue_element_struct {
+ 	int item;
+ 	PRIORITY priority;
+ } ELEMENT;
+ 
  //need to make some kind of error messages to be checked for
  //
  
@@ -47,7 +52,7 @@
   *
   *
   ******************************************************/
- int enqueue(int item, PRIORITY priority, QUEUE_TICKET token);
+ ELEMENT enqueue(int item, PRIORITY priority, QUEUE_TICKET token);
  
  /******************************************************
   * 
