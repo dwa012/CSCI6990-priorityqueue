@@ -2,5 +2,5 @@
 #include <stdio.h>
 
 QUEUE_TICKET create(){
-	printf("size of int %d",sizeof(int));
+	printf("size of int %lf",sizeof(int));
 }
