@@ -15,6 +15,7 @@
  
  typedef int QUEUE_TICKET;
  typedef int QUEUE_ERROR;
+ typedef int PRIORITY;
  
  //need to make some kind of error messages to be checked for
  //
@@ -46,7 +47,7 @@
   *
   *
   ******************************************************/
- int enqueue(int item, int priority, QUEUE_TICKET token);
+ int enqueue(int item, PRIORITY priority, QUEUE_TICKET token);
  
  /******************************************************
   * 
