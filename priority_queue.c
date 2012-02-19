@@ -14,10 +14,7 @@ typedef char bool;
 #define FALSE	0
 
 
-QUEUE_TICKET create(){
-	if(is_valid() == TRUE)
-		printf("size f %d \n",sizeof(ERROR));
-	
+QUEUE_TICKET create(){	
 	return 0;
 }
 
