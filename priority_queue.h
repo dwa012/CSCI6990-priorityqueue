@@ -15,7 +15,6 @@
  
  //STRUCTS
  typedef int QUEUE_TICKET;
- typedef int QUEUE_ERROR;
  typedef int PRIORITY;
  
  //USED TO STORE QUEUE ELEMENTS
@@ -24,8 +23,10 @@
  	PRIORITY priority;
  } ELEMENT;
  
- //need to make some kind of error messages to be checked for
- //
+ typedef struct queue_error{
+ 	char message[1024];
+ 	int code;
+ } ERROR;
  
  /******************************************************
   * Creates a new priority queue to be used. 
@@ -45,8 +46,12 @@
   * Will attempt to delete the queue represented by the
   * given token.
   * 
+  * If queue deletion was unsuccessful then an ERROR
+  * will be created. 
+  * 
+  * You must follow this command with a
   ******************************************************/
- int delete_queue(QUEUE_TICKET token);
+ void delete_queue(QUEUE_TICKET token);
  
  /******************************************************
   * 
@@ -54,17 +59,17 @@
   *
   *
   ******************************************************/
- ELEMENT enqueue(int item, PRIORITY priority, QUEUE_TICKET token);
+ void enqueue(ELEMENT item, QUEUE_TICKET token);
  
  /******************************************************
   * 
   ******************************************************/
- int dequeue(int item, QUEUE_TICKET token);
+ ELEMENT dequeue(QUEUE_TICKET token);
  
  /******************************************************
   * Get the error of the last action if any.
   ******************************************************/
- int GET_ERROR(QUEUE_TICKET token);
+ ERROR GET_ERROR(QUEUE_TICKET token);
  
  
 #endif //STORMO_WARD_PRIORITY_QUEUE
