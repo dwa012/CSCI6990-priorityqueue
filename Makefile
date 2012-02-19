@@ -3,19 +3,19 @@
 CC=gcc
 # Hey!, I am comment number 2. I want to say that CFLAGS will be the
 # options I'll pass to the compiler.
-CFLAGS=-std=c99 -c -Wall
+CFLAGS=-c -Wall
 
 all: run
 
-run: run.o priority_queue.o
-	$(CC) run.o priority_queue.o -o run
+run: libpq.a
+	$(CC) run.c libpq.a -o run
 	
-run.o: run.c
-	$(CC) $(CFLAGS) run.c priority_queue.h
+priority_queue.a: priority_queue.o
+	ar rcs libpq.a priority_queue.o
 	
 priority_queue.o: priority_queue.c priority_queue.h
 	$(CC) $(CFLAGS) priority_queue.c
 
-clean:
-	\rm -rf *.o *~ run 
+#clean:
+#	\rm -rf *.o *~ run 
 	

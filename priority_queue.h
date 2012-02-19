@@ -8,19 +8,12 @@
  #ifndef STORMO_WARD_PRIORITY_QUEUE
  #define STORMO_WARD_PRIORITY_QUEUE
  
- //used a struct to prevent changeing of
- //of primitive typedef changes
- //typedef struct ticket_struct QUEUE_TICKET;
- //struct TB;
- 
- //STRUCTS
  typedef int QUEUE_TICKET;
- typedef int PRIORITY;
  
  //USED TO STORE QUEUE ELEMENTS
  typedef struct queue_element_struct {
  	int item;
- 	PRIORITY priority;
+ 	int priority;
  } ELEMENT;
  
  typedef struct queue_error{
@@ -69,7 +62,7 @@
  /******************************************************
   * Get the error of the last action if any.
   ******************************************************/
- ERROR GET_ERROR(QUEUE_TICKET token);
+ ERROR GET_LAST_ERROR(QUEUE_TICKET token);
  
  
 #endif //STORMO_WARD_PRIORITY_QUEUE
