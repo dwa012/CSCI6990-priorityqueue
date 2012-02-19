@@ -13,5 +13,5 @@ priority_queue.o: priority_queue.c priority_queue.h
 	$(CC) $(CFLAGS) priority_queue.c
 
 clean:
-	\rm -rf *.o *~ run libpq.a
+	rm -rf *.o *~ run libpq.a
 	

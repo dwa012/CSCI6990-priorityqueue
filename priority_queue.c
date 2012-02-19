@@ -1,5 +1,4 @@
 #include "priority_queue.h"
-//#include <stdio.h>
 
  typedef char bool;
 

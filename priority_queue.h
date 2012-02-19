@@ -3,6 +3,8 @@
  * Authors: Jeremy Stormo & Daniel Ward
  *
  * This header provides the prototypes for a priority queue library.
+ * All queue operations generate an ERROR. If the operation is a
+ * success then the ERROR will reflect that.
  */
  
  #ifndef STORMO_WARD_PRIORITY_QUEUE
@@ -11,6 +13,15 @@
  //Defines for the typedefed bool
  #define TRUE 1
  #define FALSE 0
+ 
+ //error defines
+ #define QUEUE_CANNOT_BE_DELETED	-1
+ #define QUEUE_PREVIOUSLY_DELETED	-2
+ #define TOKEN_INVALID				-3
+ #define QUEUE_DOES_NOT_EXIST		-4
+ #define QUEUE_IS_FULL				-5
+ #define ITEM_INVALID				-6
+ #define QUEUE_IS_EMPTY				-7
  
  typedef long QUEUE_TICKET; //used for the ticket of a queue
  typedef char bool; //a stand in type for a bool
@@ -36,7 +47,7 @@
   * be returned. This token will need to be presented
   * when any queue operations are to be requested.
   *
-  * PRECONDITIONS:
+  * PRECONDITION:
   *		
   * POSTCONDITION: 
   *		The returned value will be the identifier for
@@ -54,7 +65,7 @@
   * Will attempt to delete the queue represented by the
   * given token.
   * 
-  * PRECONDITIONS:
+  * PRECONDITION:
   *		token is a valid token and queue has not been
   *		been previously deleted. token != NULL.
   * POSTCONDITION: 
@@ -76,7 +87,7 @@
   * Will place the gien item into the queue represented
   * by the given token.
   * 
-  * PRECONDITIONS:
+  * PRECONDITION:
   * 	item != NULL && item.item != NULL &&
   * 	item.priority != NULL && item.priority > 0
   * 	item.priority < 1,000,000
@@ -85,7 +96,7 @@
   * 	queue, queue that has not been previously deleted,
   * 	a queue that is not full.
   * 
-  * POSTCONDITIONS:
+  * POSTCONDITIONS
   * 	Will add the given item to the end of the queue
   * 	that is represented by the given token, iff the
   * 	given token is valid and the item is valid.
@@ -106,13 +117,13 @@
   * Will remove the ELEMENT from the front of the queue
   * represtented by the given token.
   * 
-  * PRECONDITIONS:
+  * PRECONDITION:
   * 	token > 0 and be a valid token for a created
   * 	queue, token is valid for a queue that has
   * 	not been previously deleted, has been 
   * 	previously created, and is_empty() == FALSE.
   * 
-  * POSTCONDITIONS:
+  * POSTCONDITION:
   * 	Will remove and return the ELEMENT from the 
   * 	front of the queue represented by the token.
   * 
@@ -130,16 +141,56 @@
  
  /******************************************************
   * Get the error if any of the last action if any.
+  * 
+  * Will return the last error for the queue represented
+  * by the token.
+  *
+  * PRECONDITION:
+  * 	token > 0 and be a valid token for a created
+  * 	queue that has not been deleted.
+  * 
+  * POSTCONDITION:
+  * 	Will return an ERROR that will contain the
+  * 	message and error code of the last operation
+  * 	on the queue represtned by the given token.
+  * 	If no error occured then the ERROR code will
+  * 	be SUCCESS and the message will be empty.
   ******************************************************/
  ERROR get_last_error(QUEUE_TICKET token);
 
  /******************************************************
   * Check if the queue is empty
+  * 
+  * PRECONDITION:
+  * 	token > 0 and be a valid token for a created
+  * 	queue that has not been deleted.
+  * 
+  * POSTCONDITION:
+  * 	Will return TRUE if the queue represented by
+  * 	the token is full, else returns FALSE 
+  * 
+  * ERROR CODES:
+  * 	QUEUE_DOES_NOT_EXIST
+  * 	QUEUE_PREVIOUSLY_DELETED
+  * 	TOKEN_INVLAID
   ******************************************************/
  bool is_empty(QUEUE_TICKET token);
  
  /******************************************************
   * Check if the queue is full
+  * 
+  * PRECONDITION:
+  * 	token > 0 and be a valid token for a created
+  * 	queue that has not been deleted.
+  * 
+  * POSTCONDITION:
+  * 	Will return TRUE if the queue represented by
+  * 	the token is full, else returns FALSE
+  * 
+  * ERROR CODES:
+  * 	QUEUE_DOES_NOT_EXIST
+  * 	QUEUE_PREVIOUSLY_DELETED
+  * 	TOKEN_INVLAID 
   ******************************************************/
  bool is_full(QUEUE_TICKET token);
  
