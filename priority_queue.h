@@ -17,7 +17,7 @@
  //error defines
  #define QUEUE_CANNOT_BE_DELETED	-1
  #define QUEUE_PREVIOUSLY_DELETED	-2
- #define TOKEN_INVALID				-3
+ #define TICKET_INVALID				-3
  #define QUEUE_DOES_NOT_EXIST		-4
  #define QUEUE_IS_FULL				-5
  #define ITEM_INVALID				-6
@@ -43,8 +43,8 @@
  /******************************************************
   * Creates a new priority queue to be used. 
   * 
-  * If the queue is created successfully a token will
-  * be returned. This token will need to be presented
+  * If the queue is created successfully a ticket will
+  * be returned. This ticket will need to be presented
   * when any queue operations are to be requested.
   *
   * PRECONDITION:
@@ -63,14 +63,14 @@
   * Deletes a queue.
   * 
   * Will attempt to delete the queue represented by the
-  * given token.
+  * given ticket.
   * 
   * PRECONDITION:
-  *		token is a valid token and queue has not been
-  *		been previously deleted. token != NULL.
+  *		ticket is a valid ticket and queue has not been
+  *		been previously deleted. ticket != NULL.
   * POSTCONDITION: 
-  *		If the token is valid and reperesents an existing
-  *		queue, it will be deleted. If the token is invalid,
+  *		If the ticket is valid and reperesents an existing
+  *		queue, it will be deleted. If the ticket is invalid,
   *		the queue is already deleted, or the queue was
   *		already deleted an ERROR will be given. 
   * 
@@ -79,27 +79,27 @@
   * ERROR CODES:
   *		QUEUE_CANNOT_BE_DELETED
   *		QUEUE_PREVIOUSLY_DELETED
-  *		TOKEN_INVALID
+  *		TICKET_INVALID
   ******************************************************/
- ERROR delete_queue(QUEUE_TICKET token);
+ ERROR delete_queue(QUEUE_TICKET ticket);
  
  /******************************************************
   * Will place the gien item into the queue represented
-  * by the given token.
+  * by the given ticket.
   * 
   * PRECONDITION:
   * 	item != NULL && item.item != NULL &&
   * 	item.priority != NULL && item.priority > 0
   * 	item.priority < 1,000,000
   * 	
-  * 	token > 0 and be a valid token for a created
+  * 	ticket > 0 and be a valid ticket for a created
   * 	queue, queue that has not been previously deleted,
   * 	a queue that is not full.
   * 
   * POSTCONDITIONS
   * 	Will add the given item to the end of the queue
-  * 	that is represented by the given token, iff the
-  * 	given token is valid and the item is valid.
+  * 	that is represented by the given ticket, iff the
+  * 	given ticket is valid and the item is valid.
   * 
   * 	An ERROR will be returned that will contain a 
   * 	error message and error code.
@@ -108,90 +108,120 @@
   * 	QUEUE_DOES_NOT_EXIST
   * 	QUEUE_PREVIOUSLY_DELETED
   * 	QUEUE_IS_FULL
-  * 	TOKEN_INVLAID
+  * 	TICKET_INVLAID
   * 	ITEM_INVALID
   ******************************************************/
- ERROR enqueue(ELEMENT item, QUEUE_TICKET token);
+ ERROR enqueue(ELEMENT item, QUEUE_TICKET ticket);
  
  /******************************************************
   * Will remove the ELEMENT from the front of the queue
-  * represtented by the given token.
+  * represtented by the given ticket.
   * 
   * PRECONDITION:
-  * 	token > 0 and be a valid token for a created
-  * 	queue, token is valid for a queue that has
+  * 	ticket > 0 and be a valid ticket for a created
+  * 	queue, ticket is valid for a queue that has
   * 	not been previously deleted, has been 
   * 	previously created, and is_empty() == FALSE.
   * 
   * POSTCONDITION:
   * 	Will remove and return the ELEMENT from the 
-  * 	front of the queue represented by the token.
+  * 	front of the queue represented by the ticket.
   * 
   * 	Will create an ERROR which can be retrieved
-  * 	with get_last_error(token). This ERROR will
+  * 	with get_last_error(ticket). This ERROR will
   * 	contain a message and an error code.
   * 
   * ERROR CODES:
   * 	QUEUE_IS_EMPTY
   * 	QUEUE_DOES_NOT_EXIST
   * 	QUEUE_PREVIOUSLY_DELETED
-  * 	TOKEN_INVLAID
+  * 	TICKET_INVLAID
   ******************************************************/
- ELEMENT dequeue(QUEUE_TICKET token);
+ ELEMENT dequeue(QUEUE_TICKET ticket);
  
  /******************************************************
-  * Get the error if any of the last action if any.
+  * Will return a copy of the ELEMENT from the front
+  * of the queue represented by the given ticket.
   * 
-  * Will return the last error for the queue represented
-  * by the token.
-  *
   * PRECONDITION:
-  * 	token > 0 and be a valid token for a created
-  * 	queue that has not been deleted.
+  * 	ticket > 0 and be a valid ticket for a created
+  * 	queue, has not been previously deleted, and 
+  * 	is_empty() == FALSE.
   * 
   * POSTCONDITION:
-  * 	Will return an ERROR that will contain the
-  * 	message and error code of the last operation
-  * 	on the queue represtned by the given token.
-  * 	If no error occured then the ERROR code will
-  * 	be SUCCESS and the message will be empty.
+  * 	Will return a copy of the ELEMENT from the front
+  * 	of the queue represented by the ticket.
+  * 
+  * 	Will create an ERROR which can be retrieved
+  * 	with get_last_error(ticket). This ERROR will
+  * 	contain a message and an error code.
+  * 
+  * ERROR CODES:
+  * 	QUEUE_IS_EMPTY
+  * 	QUEUE_DOES_NOT_EXIST
+  * 	QUEUE_PREVIOUSLY_DELETED
+  * 	TICKET_INVLAID
   ******************************************************/
- ERROR get_last_error(QUEUE_TICKET token);
-
+ ELEMENT peek(QUEUE_TICKET ticket);
+ 
  /******************************************************
   * Check if the queue is empty
   * 
   * PRECONDITION:
-  * 	token > 0 and be a valid token for a created
+  * 	ticket > 0 and be a valid ticket for a created
   * 	queue that has not been deleted.
   * 
   * POSTCONDITION:
   * 	Will return TRUE if the queue represented by
-  * 	the token is full, else returns FALSE 
+  * 	the ticket is full, else returns FALSE 
   * 
   * ERROR CODES:
   * 	QUEUE_DOES_NOT_EXIST
   * 	QUEUE_PREVIOUSLY_DELETED
-  * 	TOKEN_INVLAID
+  * 	TICKET_INVLAID
   ******************************************************/
- bool is_empty(QUEUE_TICKET token);
+ bool is_empty(QUEUE_TICKET ticket);
  
  /******************************************************
   * Check if the queue is full
   * 
   * PRECONDITION:
-  * 	token > 0 and be a valid token for a created
+  * 	ticket > 0 and be a valid ticket for a created
   * 	queue that has not been deleted.
   * 
   * POSTCONDITION:
   * 	Will return TRUE if the queue represented by
-  * 	the token is full, else returns FALSE
+  * 	the ticket is full, else returns FALSE
   * 
   * ERROR CODES:
   * 	QUEUE_DOES_NOT_EXIST
   * 	QUEUE_PREVIOUSLY_DELETED
-  * 	TOKEN_INVLAID 
+  * 	TICKET_INVLAID 
   ******************************************************/
- bool is_full(QUEUE_TICKET token);
+ bool is_full(QUEUE_TICKET ticket);
+ 
+ /******************************************************
+  * Get the error if any of the last action if any.
+  * 
+  * Will return the last error for the queue represented
+  * by the ticket.
+  *
+  * PRECONDITION:
+  * 	ticket > 0 and be a valid ticket for a created
+  * 	queue that has not been deleted.
+  * 
+  * POSTCONDITION:
+  * 	Will return an ERROR that will contain the
+  * 	message and error code of the last operation
+  * 	on the queue represtned by the given ticket.
+  * 	If no error occured then the ERROR code will
+  * 	be SUCCESS and the message will be empty.
+  * 
+  * ERROR CODES:
+  * 	QUEUE_DOES_NOT_EXIST
+  * 	QUEUE_PREVIOUSLY_DELETED
+  * 	TICKET_INVLAID 
+  ******************************************************/
+ ERROR get_last_error(QUEUE_TICKET ticket);
  
 #endif //STORMO_WARD_PRIORITY_QUEUE
