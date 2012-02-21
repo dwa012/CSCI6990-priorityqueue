@@ -54,6 +54,10 @@
   * 	the created queue. If result > 0 then the
   * 	queue was successfully created. If result < 0
   * 	then there was an error creating the queue.
+  * 
+  * 	The created queue can only hold 1024 elements.
+  * 	If more elements are added than that then an
+  * 	ERROR will be produced.
   *
   * ERROR CODES:
   ******************************************************/
