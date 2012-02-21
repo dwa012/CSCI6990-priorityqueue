@@ -1,2 +1,11 @@
-test
-Jerry's test
+Before you start building and working you need to run:
+	gtest_build.sh
+This will build the gtest libraries for use.
+
+When working you can run: 
+	make
+to build the the priority queue library
+
+To build the testing program to run the the unit test
+	make test
+This will produce the a "test" binary that you can run

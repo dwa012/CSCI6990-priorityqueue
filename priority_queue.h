@@ -24,7 +24,7 @@
  #define QUEUE_IS_EMPTY				-7
  
  typedef long QUEUE_TICKET; //used for the ticket of a queue
- typedef char bool; //a stand in type for a bool
+ typedef char boolean; //a stand in type for a bool
  
  //Used for queue items to store the item an priority
  typedef struct queue_element_struct {
@@ -178,7 +178,7 @@
   * 	QUEUE_PREVIOUSLY_DELETED
   * 	TOKEN_INVLAID
   ******************************************************/
- bool is_empty(QUEUE_TICKET token);
+ boolean is_empty(QUEUE_TICKET token);
  
  /******************************************************
   * Check if the queue is full
@@ -196,6 +196,6 @@
   * 	QUEUE_PREVIOUSLY_DELETED
   * 	TOKEN_INVLAID 
   ******************************************************/
- bool is_full(QUEUE_TICKET token);
+ boolean is_full(QUEUE_TICKET token);
  
 #endif //STORMO_WARD_PRIORITY_QUEUE

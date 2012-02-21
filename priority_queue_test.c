@@ -1,4 +1,5 @@
-#include "priority_queue.h"
+#include "priority_queue.c"
+#include <limits.h>
 #include "gtest/gtest.h"
 
 /******************************************************
@@ -165,3 +166,4 @@
 //TEST(PRIORITY_QUEUE,CREATE){
 	
 //}
+
