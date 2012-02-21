@@ -184,11 +184,7 @@
   * 	QUEUE_PREVIOUSLY_DELETED
   * 	TICKET_INVLAID
   ******************************************************/
-<<<<<<< HEAD
- bool is_empty(QUEUE_TICKET ticket);
-=======
  boolean is_empty(QUEUE_TICKET token);
->>>>>>> daniel
  
  /******************************************************
   * Check if the queue is full
@@ -206,7 +202,7 @@
   * 	QUEUE_PREVIOUSLY_DELETED
   * 	TICKET_INVLAID 
   ******************************************************/
- bool is_full(QUEUE_TICKET ticket);
+ boolean is_full(QUEUE_TICKET ticket);
  
  /******************************************************
   * Get the error if any of the last action if any.
@@ -230,10 +226,6 @@
   * 	QUEUE_PREVIOUSLY_DELETED
   * 	TICKET_INVLAID 
   ******************************************************/
-<<<<<<< HEAD
  ERROR get_last_error(QUEUE_TICKET ticket);
-=======
- boolean is_full(QUEUE_TICKET token);
->>>>>>> daniel
  
 #endif //STORMO_WARD_PRIORITY_QUEUE
