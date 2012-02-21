@@ -1,12 +1,9 @@
-#include "priority_queue.h"
-
- typedef char bool;
+ #include "priority_queue.h"
+ #include "stdio.h"
 
  #define MAXIMUM_NUMBER_OF_QUEUES 				1024
  #define MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE	1024
 
- #define TRUE	1
- #define FALSE	0
 
  static ERROR last_error;
 
