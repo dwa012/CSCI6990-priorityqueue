@@ -163,7 +163,7 @@
   * 	TOKEN_INVLAID 
   ******************************************************/
  //bool is_full(QUEUE_TICKET token);
-//TEST(PRIORITY_QUEUE,CREATE){
+TEST(PRIORITY_QUEUE,CREATE){
 	
-//}
+}
 
