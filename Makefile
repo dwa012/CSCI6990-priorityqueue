@@ -22,9 +22,11 @@ test: priority_queue_test.o
 priority_queue_test.o:
 	g++ -c -Igtest-1.6.0/include -o priority_queue_test.o priority_queue_test.c
 	
-.PHONY: all clean test
+.PHONY: clean all
 	
 #FOR CLEANING ALL MADE FILES
 clean:
 	rm -rf *.o *~ run test libpq.a
+	
+	
 	
