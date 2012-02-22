@@ -3,8 +3,8 @@
  * Authors: Jeremy Stormo & Daniel Ward
  *
  * This header provides the prototypes for a priority queue library.
- * All queue operations generate an ERROR. If the operation is a
- * success then the ERROR will reflect that.
+ * All queue operations generate an RESULT. If the operation is a
+ * success then the RESULT will reflect that.
  */
  
  #ifndef STORMO_WARD_PRIORITY_QUEUE
@@ -14,7 +14,8 @@
  #define TRUE 1
  #define FALSE 0
  
- //error defines
+ //RESULT defines
+ #define SUCCESS					 1
  #define QUEUE_CANNOT_BE_DELETED	-1
  #define QUEUE_PREVIOUSLY_DELETED	-2
  #define TOKEN_INVALID				-3
@@ -32,11 +33,16 @@
  	int priority;
  } ELEMENT;
  
- //Used for error messages. Will hold an error message and code
- typedef struct queue_error{
+ //Used for RESULT messages. Will hold an RESULT message and code
+ typedef struct queue_result{
  	char message[1024];
  	int code;
- } ERROR;
+ } RESULT;
+ 
+ typedef struct queue_welcome{
+	 QUEUE_TICKET ticket;
+	 RESULT result;
+} WELCOME_PACKET;
  
 
  
@@ -53,15 +59,15 @@
   *		The returned value will be the identifier for
   * 	the created queue. If result > 0 then the
   * 	queue was successfully created. If result < 0
-  * 	then there was an error creating the queue.
+  * 	then there was an RESULT creating the queue.
   * 
   * 	The created queue can only hold 1024 elements.
   * 	If more elements are added than that then an
-  * 	ERROR will be produced.
+  * 	RESULT will be produced.
   *
-  * ERROR CODES:
+  * RESULT CODES:
   ******************************************************/
- QUEUE_TICKET create_queue();
+ WELCOME_PACKET create_queue();
  
  /******************************************************
   * Deletes a queue.
@@ -76,16 +82,16 @@
   *		If the token is valid and reperesents an existing
   *		queue, it will be deleted. If the token is invalid,
   *		the queue is already deleted, or the queue was
-  *		already deleted an ERROR will be given. 
+  *		already deleted an RESULT will be given. 
   * 
-  * 	The ERROR will contain a message and an error code.
+  * 	The RESULT will contain a message and an RESULT code.
   *
-  * ERROR CODES:
+  * RESULT CODES:
   *		QUEUE_CANNOT_BE_DELETED
   *		QUEUE_PREVIOUSLY_DELETED
   *		TOKEN_INVALID
   ******************************************************/
- ERROR delete_queue(QUEUE_TICKET token);
+ RESULT delete_queue(QUEUE_TICKET token);
  
  /******************************************************
   * Will place the gien item into the queue represented
@@ -94,7 +100,8 @@
   * PRECONDITION:
   * 	item != NULL && item.item != NULL &&
   * 	item.priority != NULL && item.priority > 0
-  * 	item.priority < 1,000,000
+  * 	item.priority < 10. item.priority is given as
+  * 	0 is least urgent, and 10 is most urgent.
   * 	
   * 	token > 0 and be a valid token for a created
   * 	queue, queue that has not been previously deleted,
@@ -105,17 +112,17 @@
   * 	that is represented by the given token, iff the
   * 	given token is valid and the item is valid.
   * 
-  * 	An ERROR will be returned that will contain a 
-  * 	error message and error code.
+  * 	An RESULT will be returned that will contain a 
+  * 	RESULT message and RESULT code.
   * 
-  * ERROR CODES:
+  * RESULT CODES:
   * 	QUEUE_DOES_NOT_EXIST
   * 	QUEUE_PREVIOUSLY_DELETED
   * 	QUEUE_IS_FULL
   * 	TOKEN_INVLAID
   * 	ITEM_INVALID
   ******************************************************/
- ERROR enqueue(ELEMENT item, QUEUE_TICKET token);
+ void enqueue(ELEMENT item, QUEUE_TICKET token);
  
  /******************************************************
   * Will remove the ELEMENT from the front of the queue
@@ -131,11 +138,11 @@
   * 	Will remove and return the ELEMENT from the 
   * 	front of the queue represented by the token.
   * 
-  * 	Will create an ERROR which can be retrieved
-  * 	with get_last_error(token). This ERROR will
-  * 	contain a message and an error code.
+  * 	Will create an RESULT which can be retrieved
+  * 	with get_last_RESULT(token). This RESULT will
+  * 	contain a message and an RESULT code.
   * 
-  * ERROR CODES:
+  * RESULT CODES:
   * 	QUEUE_IS_EMPTY
   * 	QUEUE_DOES_NOT_EXIST
   * 	QUEUE_PREVIOUSLY_DELETED
@@ -144,9 +151,9 @@
  ELEMENT dequeue(QUEUE_TICKET token);
  
  /******************************************************
-  * Get the error if any of the last action if any.
+  * Get the RESULT if any of the last action if any.
   * 
-  * Will return the last error for the queue represented
+  * Will return the last RESULT for the queue represented
   * by the token.
   *
   * PRECONDITION:
@@ -154,13 +161,13 @@
   * 	queue that has not been deleted.
   * 
   * POSTCONDITION:
-  * 	Will return an ERROR that will contain the
-  * 	message and error code of the last operation
+  * 	Will return an RESULT that will contain the
+  * 	message and RESULT code of the last operation
   * 	on the queue represtned by the given token.
-  * 	If no error occured then the ERROR code will
+  * 	If no error occured then the RESULT code will
   * 	be SUCCESS and the message will be empty.
   ******************************************************/
- ERROR get_last_error(QUEUE_TICKET token);
+ RESULT get_last_result(QUEUE_TICKET token);
 
  /******************************************************
   * Check if the queue is empty
@@ -173,7 +180,7 @@
   * 	Will return TRUE if the queue represented by
   * 	the token is full, else returns FALSE 
   * 
-  * ERROR CODES:
+  * RESULT CODES:
   * 	QUEUE_DOES_NOT_EXIST
   * 	QUEUE_PREVIOUSLY_DELETED
   * 	TOKEN_INVLAID
@@ -191,7 +198,7 @@
   * 	Will return TRUE if the queue represented by
   * 	the token is full, else returns FALSE
   * 
-  * ERROR CODES:
+  * RESULT CODES:
   * 	QUEUE_DOES_NOT_EXIST
   * 	QUEUE_PREVIOUSLY_DELETED
   * 	TOKEN_INVLAID 

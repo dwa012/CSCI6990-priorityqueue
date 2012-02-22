@@ -125,6 +125,9 @@
   * 	on the queue represtned by the given token.
   * 	If no error occured then the ERROR code will
   * 	be SUCCESS and the message will be empty.
+  * 
+  * RESULTS CODES:
+  * 	QUEUE_DOES_NOT_EXIST
   ******************************************************/
  //ERROR get_last_error(QUEUE_TICKET token);
 
@@ -159,11 +162,25 @@
   * 
   * ERROR CODES:
   * 	QUEUE_DOES_NOT_EXIST
-  * 	QUEUE_PREVIOUSLY_DELETED
   * 	TOKEN_INVLAID 
   ******************************************************/
  //bool is_full(QUEUE_TICKET token);
-TEST(PRIORITY_QUEUE,CREATE){
+TEST(PRIORITY_QUEUE,FULL){
 	
+	//WELCOME_PACKET ticket = create_queue();
+	//EXPECT_EQ(FALSE,is_full(ticket));
+	
+	//do some stuff to fill the queue
+	
+	//EXPECT_EQ(FALSE,is_full(ticket));
+	
+	//delete a queue then try to see if it is full or not
+	//delete_queue(ticket);
+	
+	//the 	
+	//EXPECT_EQ(FALSE,is_full(ticket));
+	
+	//ERROR err = get_last_error(ticket)
+	//EXPECT_EQ(err.code, QUEUE_DOES_NOT_EXIST);
 }
 
