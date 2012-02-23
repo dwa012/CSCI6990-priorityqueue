@@ -120,7 +120,6 @@
   * 
   * RESULT CODES:
   * 	QUEUE_DOES_NOT_EXIST
-  * 	QUEUE_PREVIOUSLY_DELETED
   * 	QUEUE_IS_FULL
   * 	TOKEN_INVLAID
   * 	ITEM_INVALID
@@ -148,7 +147,6 @@
   * RESULT CODES:
   * 	QUEUE_IS_EMPTY
   * 	QUEUE_DOES_NOT_EXIST
-  * 	QUEUE_PREVIOUSLY_DELETED
   * 	TOKEN_INVLAID
   ******************************************************/
  ELEMENT dequeue(QUEUE_TICKET token);
@@ -166,7 +164,6 @@
   * 
   * RESULT CODES:
   * 	QUEUE_DOES_NOT_EXIST
-  * 	QUEUE_PREVIOUSLY_DELETED
   * 	TOKEN_INVLAID
   ******************************************************/
  boolean is_empty(QUEUE_TICKET token);
@@ -184,7 +181,6 @@
   * 
   * RESULT CODES:
   * 	QUEUE_DOES_NOT_EXIST
-  * 	QUEUE_PREVIOUSLY_DELETED
   * 	TOKEN_INVLAID 
   ******************************************************/
  boolean is_full(QUEUE_TICKET token);

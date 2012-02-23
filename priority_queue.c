@@ -6,11 +6,11 @@
 
 
 
-WELCOME_PACKET create_queue(){
-	 WELCOME_PACKET e;
-	 e.ticket = 232;
-	 e.result = Res
-	// e.
-	 //e.ticket = 423432;	
-	return e;
- }
+//WELCOME_PACKET create_queue(){
+	 //WELCOME_PACKET e;
+	 //e.ticket = 232;
+	 //e.result = Res
+	//// e.
+	 ////e.ticket = 423432;	
+	//return e;
+ //}

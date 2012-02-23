@@ -167,7 +167,13 @@
  //bool is_full(QUEUE_TICKET token);
 TEST(PRIORITY_QUEUE,FULL){
 	
-	//WELCOME_PACKET ticket = create_queue();
+	EXPECT_EQ(is_full(424234),false);
+	RESULT result = get_last_result();
+	EXPECT_EQ(result.code,QUEUE_DOES_NOT_EXIST);
+	
+	WELCOME_PACKET ticket = create_queue();
+	
+	
 	//EXPECT_EQ(FALSE,is_full(ticket));
 	
 	//do some stuff to fill the queue
