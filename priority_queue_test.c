@@ -82,111 +82,56 @@
   * 	ITEM_INVALID
   ******************************************************/
  //ERROR enqueue(ELEMENT item, QUEUE_TICKET token);
- 
- /******************************************************
-  * Will remove the ELEMENT from the front of the queue
-  * represtented by the given token.
-  * 
-  * PRECONDITION:
-  * 	token > 0 and be a valid token for a created
-  * 	queue, token is valid for a queue that has
-  * 	not been previously deleted, has been 
-  * 	previously created, and is_empty() == FALSE.
-  * 
-  * POSTCONDITION:
-  * 	Will remove and return the ELEMENT from the 
-  * 	front of the queue represented by the token.
-  * 
-  * 	Will create an ERROR which can be retrieved
-  * 	with get_last_error(token). This ERROR will
-  * 	contain a message and an error code.
-  * 
-  * ERROR CODES:
-  * 	QUEUE_IS_EMPTY
-  * 	QUEUE_DOES_NOT_EXIST
-  * 	QUEUE_PREVIOUSLY_DELETED
-  * 	TOKEN_INVLAID
-  ******************************************************/
- //ELEMENT dequeue(QUEUE_TICKET token);
- 
- /******************************************************
-  * Get the error if any of the last action if any.
-  * 
-  * Will return the last error for the queue represented
-  * by the token.
-  *
-  * PRECONDITION:
-  * 	token > 0 and be a valid token for a created
-  * 	queue that has not been deleted.
-  * 
-  * POSTCONDITION:
-  * 	Will return an ERROR that will contain the
-  * 	message and error code of the last operation
-  * 	on the queue represtned by the given token.
-  * 	If no error occured then the ERROR code will
-  * 	be SUCCESS and the message will be empty.
-  * 
-  * RESULTS CODES:
-  * 	QUEUE_DOES_NOT_EXIST
-  ******************************************************/
- //ERROR get_last_error(QUEUE_TICKET token);
 
- /******************************************************
-  * Check if the queue is empty
-  * 
-  * PRECONDITION:
-  * 	token > 0 and be a valid token for a created
-  * 	queue that has not been deleted.
-  * 
-  * POSTCONDITION:
-  * 	Will return TRUE if the queue represented by
-  * 	the token is full, else returns FALSE 
-  * 
-  * ERROR CODES:
-  * 	QUEUE_DOES_NOT_EXIST
-  * 	QUEUE_PREVIOUSLY_DELETED
-  * 	TOKEN_INVLAID
-  ******************************************************/
- //bool is_empty(QUEUE_TICKET token);
+TEST(PRIORITY_QUEUE,DEQUEUE){
+	//~ QUEUE_IS_EMPTY
+    //~ QUEUE_DOES_NOT_EXIST
+    //~ TOKEN_INVLAID
+    
+    
+}
  
- /******************************************************
-  * Check if the queue is full
-  * 
-  * PRECONDITION:
-  * 	token > 0 and be a valid token for a created
-  * 	queue that has not been deleted.
-  * 
-  * POSTCONDITION:
-  * 	Will return TRUE if the queue represented by
-  * 	the token is full, else returns FALSE
-  * 
-  * ERROR CODES:
-  * 	QUEUE_DOES_NOT_EXIST
-  * 	TOKEN_INVLAID 
-  ******************************************************/
- //bool is_full(QUEUE_TICKET token);
 TEST(PRIORITY_QUEUE,FULL){
+	//~ QUEUE_DOES_NOT_EXIST
+	//~ TOKEN_INVLAID 
+	//~ QUEUE_IS_FULL
+	//~ QUEUE_IS_NOT_FULL
 	
-	EXPECT_EQ(is_full(424234),false);
-	RESULT result = get_last_result();
-	EXPECT_EQ(result.code,QUEUE_DOES_NOT_EXIST);
+	//try to get the full status of a non existent queue
+	RESULT result = is_full(424234);
+	EXPECT_EQ(result.code,TOKEN_INVLAID);
 	
-	WELCOME_PACKET ticket = create_queue();
+	//fill up the queue
+	WELCOME_PACKET packet = create_queue();
 	
+	if(packet.result.code == SUCCESS){
+		for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE-1; i++){
+			ELEMENT e;
+			e.item = i;
+			e.priority = i;
+			enqueue(e,packet.ticket);
+			EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_NOT_FULL);
+		}
+		
+		ELEMENT e;
+		e.item = 3;
+		e.priority = 2331;
+		
+		enqueue(e,packet.ticket);
+		EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
+		
+		enqueue(e,packet.ticket);
+		EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
+		
+		enqueue(e,packet.ticket);
+		EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
+		
+	}
+	//done filling up queue
 	
-	//EXPECT_EQ(FALSE,is_full(ticket));
+	//delete the queue then try to get the full status
+	delete_queue(packet.ticket);
+	EXPECT_EQ(is_full(packet.ticket).code,QUEUE_DOES_NOT_EXIST);
 	
-	//do some stuff to fill the queue
-	
-	//EXPECT_EQ(FALSE,is_full(ticket));
-	
-	//delete a queue then try to see if it is full or not
-	//delete_queue(ticket);
-	
-	//the 	
-	//EXPECT_EQ(FALSE,is_full(ticket));
-	
-	//ERROR err = get_last_error(ticket)
-	//EXPECT_EQ(err.code, QUEUE_DOES_NOT_EXIST);
 }
 

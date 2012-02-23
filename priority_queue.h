@@ -11,22 +11,22 @@
  #define STORMO_WARD_PRIORITY_QUEUE
  
  //Defines for the typedefed bool
- #define TRUE 1
- #define FALSE 0
+ //#define TRUE 1
+ //#define FALSE 0
  
  //RESULT defines
  #define SUCCESS					 1
  #define QUEUE_CANNOT_BE_DELETED	-1
- #define QUEUE_PREVIOUSLY_DELETED	-2
  #define TOKEN_INVALID				-3
  #define QUEUE_DOES_NOT_EXIST		-4
  #define QUEUE_IS_FULL				-5
- #define ITEM_INVALID				-6
- #define QUEUE_IS_EMPTY				-7
- #define QUEUE_CANNOT_BE_CREATED	-8
+ #define QUEUE_IS_NOT_FULL			-6
+ #define ITEM_INVALID				-7
+ #define QUEUE_IS_EMPTY				-8
+ #define QUEUE_CANNOT_BE_CREATED	-9
  
  typedef long QUEUE_TICKET; //used for the ticket of a queue
- typedef char boolean; //a stand in type for a bool
+ //typedef char boolean; //a stand in type for a bool
  
  //Used for queue items to store the item an priority
  typedef struct queue_element_struct {
@@ -152,23 +152,6 @@
  ELEMENT dequeue(QUEUE_TICKET token);
  
  /******************************************************
-  * Check if the queue is empty
-  * 
-  * PRECONDITION:
-  * 	token > 0 and be a valid token for a created
-  * 	queue that has not been deleted.
-  * 
-  * POSTCONDITION:
-  * 	Will return TRUE if the queue represented by
-  * 	the token is full, else returns FALSE 
-  * 
-  * RESULT CODES:
-  * 	QUEUE_DOES_NOT_EXIST
-  * 	TOKEN_INVLAID
-  ******************************************************/
- boolean is_empty(QUEUE_TICKET token);
- 
- /******************************************************
   * Check if the queue is full
   * 
   * PRECONDITION:
@@ -182,8 +165,10 @@
   * RESULT CODES:
   * 	QUEUE_DOES_NOT_EXIST
   * 	TOKEN_INVLAID 
+  * 	QUEUE_IS_FULL
+  * 	QUEUE_IS_NOT_FULL
   ******************************************************/
- boolean is_full(QUEUE_TICKET token);
+ RESULT is_full(QUEUE_TICKET token);
  
  /******************************************************
   * Get the RESULT of the last action on the specified
