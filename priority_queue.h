@@ -151,25 +151,6 @@
  ELEMENT dequeue(QUEUE_TICKET token);
  
  /******************************************************
-  * Get the RESULT if any of the last action if any.
-  * 
-  * Will return the last RESULT for the queue represented
-  * by the token.
-  *
-  * PRECONDITION:
-  * 	token > 0 and be a valid token for a created
-  * 	queue that has not been deleted.
-  * 
-  * POSTCONDITION:
-  * 	Will return an RESULT that will contain the
-  * 	message and RESULT code of the last operation
-  * 	on the queue represtned by the given token.
-  * 	If no error occured then the RESULT code will
-  * 	be SUCCESS and the message will be empty.
-  ******************************************************/
- RESULT get_last_result(QUEUE_TICKET token);
-
- /******************************************************
   * Check if the queue is empty
   * 
   * PRECONDITION:
@@ -204,5 +185,25 @@
   * 	TOKEN_INVLAID 
   ******************************************************/
  boolean is_full(QUEUE_TICKET token);
+ 
+ /******************************************************
+  * Get the RESULT of the last action on the specified
+  * queue.
+  * 
+  * Will return the last RESULT for the queue represented
+  * by the token.
+  *
+  * PRECONDITION:
+  * 	token > 0 and be a valid token for a created
+  * 	queue that has not been deleted.
+  * 
+  * POSTCONDITION:
+  * 	Will return an RESULT that will contain the
+  * 	message and RESULT code of the last operation
+  * 	on the queue represtned by the given token.
+  * 	If no error occured then the RESULT code will
+  * 	be SUCCESS and the message will be empty.
+  ******************************************************/
+ RESULT get_last_result(QUEUE_TICKET token);
  
 #endif //STORMO_WARD_PRIORITY_QUEUE
