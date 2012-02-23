@@ -23,6 +23,7 @@
  #define QUEUE_IS_FULL				-5
  #define ITEM_INVALID				-6
  #define QUEUE_IS_EMPTY				-7
+ #define QUEUE_CANNOT_BE_CREATED	-8
  
  typedef long QUEUE_TICKET; //used for the ticket of a queue
  typedef char boolean; //a stand in type for a bool
@@ -49,8 +50,8 @@
  /******************************************************
   * Creates a new priority queue to be used. 
   * 
-  * If the queue is created successfully a token will
-  * be returned. This token will need to be presented
+  * If the queue is created successfully a ticket will
+  * be returned. This ticket will need to be presented
   * when any queue operations are to be requested.
   *
   * PRECONDITION:
@@ -66,6 +67,8 @@
   * 	RESULT will be produced.
   *
   * RESULT CODES:
+  * 	QUEUE_CANNOT_BE_CREATED
+  * 	SUCCESS
   ******************************************************/
  WELCOME_PACKET create_queue();
  
@@ -73,14 +76,14 @@
   * Deletes a queue.
   * 
   * Will attempt to delete the queue represented by the
-  * given token.
+  * given ticket.
   * 
   * PRECONDITION:
-  *		token is a valid token and queue has not been
+  *		ticket is a valid ticket and queue has not been
   *		been previously deleted. token != NULL.
   * POSTCONDITION: 
-  *		If the token is valid and reperesents an existing
-  *		queue, it will be deleted. If the token is invalid,
+  *		If the ticket is valid and reperesents an existing
+  *		queue, it will be deleted. If the ticket is invalid,
   *		the queue is already deleted, or the queue was
   *		already deleted an RESULT will be given. 
   * 
@@ -88,10 +91,10 @@
   *
   * RESULT CODES:
   *		QUEUE_CANNOT_BE_DELETED
-  *		QUEUE_PREVIOUSLY_DELETED
+  *		QUEUE_DOES_NOT_EXIST
   *		TOKEN_INVALID
   ******************************************************/
- RESULT delete_queue(QUEUE_TICKET token);
+ RESULT delete_queue(QUEUE_TICKET ticket);
  
  /******************************************************
   * Will place the gien item into the queue represented
