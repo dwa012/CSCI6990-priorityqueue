@@ -13,6 +13,24 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 	//~ item.priority < 10. item.priority is given as
 	//~ 0 is least urgent, and 10 is most urgent.
 	
+	ELEMENT e = {8,9};
+	RESULT r = enqueue(e,-313213);
+	EXPECT_EQ(r.code, TICKET_INVALID);
+	
+	r = enqueue(e,0);
+	EXPECT_EQ(r.code, TICKET_INVALID);
+	
+	WELCOME_PACKET packet = create_queue();
+	
+	
+	
+	
+}
+
+convert_to_ticket(int index){
+	uint high;
+	uint low;
+	
 	
 }
 

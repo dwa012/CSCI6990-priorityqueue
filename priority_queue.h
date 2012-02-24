@@ -25,7 +25,7 @@
  #define QUEUE_IS_EMPTY				-8
  #define QUEUE_CANNOT_BE_CREATED	-9
  
- typedef long QUEUE_TICKET; //used for the ticket of a queue
+ typedef ulong QUEUE_TICKET; //used for the ticket of a queue
  //typedef char boolean; //a stand in type for a bool
  
  //Used for queue items to store the item an priority
@@ -45,8 +45,8 @@
  	RESULT result;
  } ELEMENT_RESULT;
  
- typedef struct queue_result{
- 	int size;
+ typedef struct size_result{
+ 	uint size;
  	RESULT result;
  } SIZE_RESULT;
  
