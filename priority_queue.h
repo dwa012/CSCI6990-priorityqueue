@@ -125,7 +125,7 @@
   * 	TOKEN_INVLAID
   * 	ITEM_INVALID
   ******************************************************/
- void enqueue(ELEMENT item, QUEUE_TICKET token);
+ RESULT enqueue(ELEMENT item, QUEUE_TICKET token);
  
  /******************************************************
   * Will remove the ELEMENT from the front of the queue
@@ -169,26 +169,9 @@
   * 	QUEUE_IS_FULL
   * 	QUEUE_IS_NOT_FULL
   ******************************************************/
- RESULT is_full(QUEUE_TICKET token);
+ RESULT is_full(QUEUE_TICKET ticket);
  
- /******************************************************
-  * Get the RESULT of the last action on the specified
-  * queue.
-  * 
-  * Will return the last RESULT for the queue represented
-  * by the token.
-  *
-  * PRECONDITION:
-  * 	token > 0 and be a valid token for a created
-  * 	queue that has not been deleted.
-  * 
-  * POSTCONDITION:
-  * 	Will return an RESULT that will contain the
-  * 	message and RESULT code of the last operation
-  * 	on the queue represtned by the given token.
-  * 	If no error occured then the RESULT code will
-  * 	be SUCCESS and the message will be empty.
-  ******************************************************/
- RESULT get_last_result(QUEUE_TICKET token);
+ //need to think about how the size will be returned
+ RESULT size(QUEUE_TICKET ticket);
  
 #endif //STORMO_WARD_PRIORITY_QUEUE
