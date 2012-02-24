@@ -11,21 +11,27 @@
  #define STORMO_WARD_PRIORITY_QUEUE
  
  //Defines for the typedefed bool
- #define TRUE 1
- #define FALSE 0
+ //#define TRUE 1
+ //#define FALSE 0
  
  //RESULT defines
  #define SUCCESS					 1
  #define QUEUE_CANNOT_BE_DELETED	-1
+<<<<<<< HEAD
  #define QUEUE_PREVIOUSLY_DELETED	-2
  #define TICKET_INVALID				-3
+=======
+ #define TOKEN_INVALID				-3
+>>>>>>> 0b6ac1829effff96c624860c86ddbfe3a7e0178f
  #define QUEUE_DOES_NOT_EXIST		-4
  #define QUEUE_IS_FULL				-5
- #define ITEM_INVALID				-6
- #define QUEUE_IS_EMPTY				-7
+ #define QUEUE_IS_NOT_FULL			-6
+ #define ITEM_INVALID				-7
+ #define QUEUE_IS_EMPTY				-8
+ #define QUEUE_CANNOT_BE_CREATED	-9
  
  typedef long QUEUE_TICKET; //used for the ticket of a queue
- typedef char boolean; //a stand in type for a bool
+ //typedef char boolean; //a stand in type for a bool
  
  //Used for queue items to store the item an priority
  typedef struct queue_element_struct {
@@ -38,6 +44,16 @@
  	char message[1024];
  	int code;
  } RESULT;
+ 
+ typedef struct queue_result{
+ 	ELEMENT element;
+ 	RESULT result;
+ } ELEMENT_RESULT;
+ 
+ typedef struct queue_result{
+ 	int size;
+ 	RESULT result;
+ } SIZE_RESULT;
  
  typedef struct queue_welcome{
 	 QUEUE_TICKET ticket;
@@ -66,6 +82,8 @@
   * 	RESULT will be produced.
   *
   * RESULT CODES:
+  * 	QUEUE_CANNOT_BE_CREATED
+  * 	SUCCESS
   ******************************************************/
  WELCOME_PACKET create_queue();
  
@@ -77,7 +95,11 @@
   * 
   * PRECONDITION:
   *		ticket is a valid ticket and queue has not been
+<<<<<<< HEAD
   *		been previously deleted. ticket != NULL.
+=======
+  *		been previously deleted. token != NULL.
+>>>>>>> 0b6ac1829effff96c624860c86ddbfe3a7e0178f
   * POSTCONDITION: 
   *		If the ticket is valid and reperesents an existing
   *		queue, it will be deleted. If the ticket is invalid,
@@ -88,10 +110,15 @@
   *
   * RESULT CODES:
   *		QUEUE_CANNOT_BE_DELETED
+<<<<<<< HEAD
   *		QUEUE_PREVIOUSLY_DELETED
   *		TICKET_INVALID
+=======
+  *		QUEUE_DOES_NOT_EXIST
+  *		TOKEN_INVALID
+>>>>>>> 0b6ac1829effff96c624860c86ddbfe3a7e0178f
   ******************************************************/
- RESULT delete_queue(QUEUE_TICKET token);
+ RESULT delete_queue(QUEUE_TICKET ticket);
  
  /******************************************************
   * Will place the gien item into the queue represented
@@ -117,12 +144,11 @@
   * 
   * RESULT CODES:
   * 	QUEUE_DOES_NOT_EXIST
-  * 	QUEUE_PREVIOUSLY_DELETED
   * 	QUEUE_IS_FULL
   * 	TICKET_INVLAID
   * 	ITEM_INVALID
   ******************************************************/
- void enqueue(ELEMENT item, QUEUE_TICKET token);
+ RESULT enqueue(ELEMENT item, QUEUE_TICKET token);
  
  /******************************************************
   * Will remove the ELEMENT from the front of the queue
@@ -145,6 +171,7 @@
   * RESULT CODES:
   * 	QUEUE_IS_EMPTY
   * 	QUEUE_DOES_NOT_EXIST
+<<<<<<< HEAD
   * 	QUEUE_PREVIOUSLY_DELETED
   * 	TICKET_INVLAID
   ******************************************************/
@@ -185,8 +212,11 @@
   * 	QUEUE_DOES_NOT_EXIST
   * 	QUEUE_PREVIOUSLY_DELETED
   * 	TICKET_INVLAID
+=======
+  * 	TOKEN_INVLAID
+>>>>>>> 0b6ac1829effff96c624860c86ddbfe3a7e0178f
   ******************************************************/
- boolean is_empty(QUEUE_TICKET token);
+ ELEMENT_RESULT dequeue(QUEUE_TICKET token);
  
  /******************************************************
   * Check if the queue is full
@@ -225,9 +255,20 @@
   * 
   * RESULT CODES:
   * 	QUEUE_DOES_NOT_EXIST
+<<<<<<< HEAD
   * 	QUEUE_PREVIOUSLY_DELETED
   * 	TICKET_INVLAID 
   ******************************************************/
  ERROR get_last_error(QUEUE_TICKET ticket);
+=======
+  * 	TOKEN_INVLAID 
+  * 	QUEUE_IS_FULL
+  * 	QUEUE_IS_NOT_FULL
+  ******************************************************/
+ RESULT is_full(QUEUE_TICKET ticket);
+ 
+ //need to think about how the size will be returned
+ SIZE_RESULT size(QUEUE_TICKET ticket);
+>>>>>>> 0b6ac1829effff96c624860c86ddbfe3a7e0178f
  
 #endif //STORMO_WARD_PRIORITY_QUEUE
