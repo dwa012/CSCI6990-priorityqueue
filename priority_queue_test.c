@@ -13,36 +13,29 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 	//~ item.priority < 10. item.priority is given as
 	//~ 0 is least urgent, and 10 is most urgent.
 	
+	//try a bad ticket numbers
 	ELEMENT e = {8,9};
+	
 	RESULT r = enqueue(e,-313213);
 	EXPECT_EQ(r.code, TICKET_INVALID);
 	
 	r = enqueue(e,0);
 	EXPECT_EQ(r.code, TICKET_INVALID);
 	
+	//create a valid queue
 	WELCOME_PACKET packet = create_queue();
 	
+	//try NULL item and priority
+	r = enqueue(NULL,packet.ticket);
+	EXPECT_EQ(r.code, ITEM_INVALID);
+	
+	e = {NULL,NULL};
+	
+	r = enqueue(e,packet.ticket);
+	EXPECT_EQ(r.code, ITEM_INVALID);
 	
 	
 	
-}
-
-static QUEUE_TICKET convert_to_ticket(int index){
-	
-	QUEUE_TICKET ticket = NULL;
-	
-	uint high;
-	uint low;
-	
-	high = (index + OFFSET) & 0x7fff;
-	low = nonce & 0xffff;
-	
-	if(high == index + OFFSET && low == nonce && low != 0) 
-		ticket = (high << 16) | low;
-	
-	nonce = nonce + 1;
-	
-	return ticket;
 }
 
 TEST(PRIORITY_QUEUE,DEQUEUE){
