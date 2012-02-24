@@ -27,11 +27,22 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 	
 }
 
-convert_to_ticket(int index){
+static QUEUE_TICKET convert_to_ticket(int index){
+	
+	QUEUE_TICKET ticket = NULL;
+	
 	uint high;
 	uint low;
 	
+	high = (index + OFFSET) & 0x7fff;
+	low = nonce & 0xffff;
 	
+	if(high == index + OFFSET && low == nonce && low != 0) 
+		ticket = (high << 16) | low;
+	
+	nonce = nonce + 1;
+	
+	return ticket;
 }
 
 TEST(PRIORITY_QUEUE,DEQUEUE){
