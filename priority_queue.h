@@ -38,8 +38,17 @@
  typedef struct queue_result{
  	char message[1024];
  	int code;
- 	ELEMENT element;
  } RESULT;
+ 
+ typedef struct queue_result{
+ 	ELEMENT element;
+ 	RESULT result;
+ } ELEMENT_RESULT;
+ 
+ typedef struct queue_result{
+ 	int size;
+ 	RESULT result;
+ } SIZE_RESULT;
  
  typedef struct queue_welcome{
 	 QUEUE_TICKET ticket;
@@ -150,7 +159,7 @@
   * 	QUEUE_DOES_NOT_EXIST
   * 	TOKEN_INVLAID
   ******************************************************/
- RESULT dequeue(QUEUE_TICKET token);
+ ELEMENT_RESULT dequeue(QUEUE_TICKET token);
  
  /******************************************************
   * Check if the queue is full
@@ -172,6 +181,6 @@
  RESULT is_full(QUEUE_TICKET ticket);
  
  //need to think about how the size will be returned
- RESULT size(QUEUE_TICKET ticket);
+ SIZE_RESULT size(QUEUE_TICKET ticket);
  
 #endif //STORMO_WARD_PRIORITY_QUEUE
