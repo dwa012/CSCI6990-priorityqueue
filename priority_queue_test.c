@@ -76,7 +76,6 @@
   * 
   * ERROR CODES:
   * 	QUEUE_DOES_NOT_EXIST
-  * 	QUEUE_PREVIOUSLY_DELETED
   * 	QUEUE_IS_FULL
   * 	TOKEN_INVLAID
   * 	ITEM_INVALID
@@ -87,7 +86,24 @@ TEST(PRIORITY_QUEUE,DEQUEUE){
 	//~ QUEUE_IS_EMPTY
     //~ QUEUE_DOES_NOT_EXIST
     //~ TOKEN_INVLAID
-    
+    RESULT result = dequeue(424234);
+	EXPECT_EQ(result.code,TICKET_INVLAID);
+	EXPECT_EQ(result.element,NULL);
+	
+	
+	WELCOME_PACKET packet = create_queue();
+	RESULT result = dequeue(packet.ticket);
+	EXPECT_EQ(result.code,QUEUE_IS_EMPTY);
+	EXPECT_EQ(result.element,NULL);
+	
+	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
+		ELEMENT e;
+		e.item = i;
+		e.priority = i;
+		enqueue(e,packet.ticket);
+	}
+	
+	
     
 }
  

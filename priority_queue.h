@@ -38,6 +38,7 @@
  typedef struct queue_result{
  	char message[1024];
  	int code;
+ 	ELEMENT element;
  } RESULT;
  
  typedef struct queue_welcome{
@@ -149,7 +150,7 @@
   * 	QUEUE_DOES_NOT_EXIST
   * 	TOKEN_INVLAID
   ******************************************************/
- ELEMENT dequeue(QUEUE_TICKET token);
+ RESULT dequeue(QUEUE_TICKET token);
  
  /******************************************************
   * Check if the queue is full
