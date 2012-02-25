@@ -9,24 +9,20 @@
  
  #ifndef STORMO_WARD_PRIORITY_QUEUE
  #define STORMO_WARD_PRIORITY_QUEUE
- 
- //Defines for the typedefed bool
- //#define TRUE 1
- //#define FALSE 0
- 
+
+ #include <stdlib.h> 
+
  //RESULT defines
  #define SUCCESS					 1
- #define QUEUE_CANNOT_BE_DELETED	-1
- #define TOKEN_INVALID				-3
- #define QUEUE_DOES_NOT_EXIST		-4
+ #define TICKET_INVALID				-1
+
  #define QUEUE_IS_FULL				-5
- #define QUEUE_IS_NOT_FULL			-6
- #define ITEM_INVALID				-7
  #define QUEUE_IS_EMPTY				-8
+ #define ITEM_INVALID				-7
  #define QUEUE_CANNOT_BE_CREATED	-9
- 
- typedef ulong QUEUE_TICKET; //used for the ticket of a queue
- //typedef char boolean; //a stand in type for a bool
+
+ typedef unsigned int uint; 
+ typedef unsigned long QUEUE_TICKET; //used for the ticket of a queue
  
  //Used for queue items to store the item an priority
  typedef struct queue_element_struct {
@@ -35,12 +31,12 @@
  } ELEMENT;
  
  //Used for RESULT messages. Will hold an RESULT message and code
- typedef struct queue_result{
+ typedef struct result{
  	char message[1024];
  	int code;
  } RESULT;
  
- typedef struct queue_result{
+ typedef struct element_result{
  	ELEMENT element;
  	RESULT result;
  } ELEMENT_RESULT;
@@ -180,7 +176,7 @@
   ******************************************************/
  RESULT is_full(QUEUE_TICKET ticket);
  
- //need to think about how the size will be returned
- SIZE_RESULT size(QUEUE_TICKET ticket);
+
+ SIZE_RESULT get_size(QUEUE_TICKET ticket);
  
 #endif //STORMO_WARD_PRIORITY_QUEUE
