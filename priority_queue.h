@@ -181,7 +181,7 @@
   ******************************************************/
  RESULT is_full(QUEUE_TICKET ticket);
  
- //need to think about how the size will be returned
+ //need documentation
  SIZE_RESULT size(QUEUE_TICKET ticket);
  
 #endif //STORMO_WARD_PRIORITY_QUEUE
