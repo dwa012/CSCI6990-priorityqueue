@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-c -Wall
 
-all: run lib test
+all: run lib
 
 run: libpq.a
 	$(CC) run.c libpq.a -o run
