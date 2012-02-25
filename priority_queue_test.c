@@ -33,10 +33,10 @@ TEST(PRIORITY,CREATE_QUEUE){
 	}
 	
 	//delete some random queues and try to recreate them
-	delete_queue(wp[0]);
-	delete_queue(wp[1024]);
-	delete_queue(wp[64]);
-	delete_queue(wp[800]);
+	delete_queue(wp[0].ticket);
+	delete_queue(wp[1024].ticket);
+	delete_queue(wp[64].ticket);
+	delete_queue(wp[800].ticket);
 	
 	wp[0] = create_queue();
 	EXPECT_EQ(wp[0].result.code,SUCCESS);
@@ -56,24 +56,24 @@ TEST(PRIORITY,CREATE_QUEUE){
 		delete_queue(wp[i].ticket);
 }
 
-TEST(PRIORITY,DELETE_QUEUE){
-	//~ TICKET_INVALID
+//TEST(PRIORITY,DELETE_QUEUE){
+	////~ TICKET_INVALID
 	
-	//try to delete a queue with a forged ticket
-	RESULT r = delete_queue(23131323);
-	EXPECT_EQ(r.code, TICKET_INVALID);
+	////try to delete a queue with a forged ticket
+	//RESULT r = delete_queue(23131323);
+	//EXPECT_EQ(r.code, TICKET_INVALID);
 	
-	WELCOME_PACKET w = create_queue();
+	//WELCOME_PACKET w = create_queue();
 	
-	//delete a queue with a valid ticket
-	r = delete_queue(w.ticket);
-	EXPECT_EQ(r.code, SUCCESS);
+	////delete a queue with a valid ticket
+	//r = delete_queue(w.ticket);
+	//EXPECT_EQ(r.code, SUCCESS);
 	
-	//try to delete an already deleted queue
-	r = delete_queue(w.ticket);
-	EXPECT_EQ(r.code, TICKET_INVALID);
+	////try to delete an already deleted queue
+	//r = delete_queue(w.ticket);
+	//EXPECT_EQ(r.code, TICKET_INVALID);
 	
-}
+//}
 
 //TEST(PRIORITY,QUEUE_ENQUEUE){
 	////~ QUEUE_DOES_NOT_EXIST
