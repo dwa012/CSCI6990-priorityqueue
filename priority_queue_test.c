@@ -2,6 +2,34 @@
 #include <limits.h>
 #include "gtest/gtest.h"
 
+TEST(PRIORITY,CREATE_QUEUE){
+	//~ QUEUE_CANNOT_BE_CREATED
+	//~ SUCCESS
+	WELCOME_PACKET w = create_queue();
+	EXPECT_EQ(w.result.code, TICKET_INVALID);
+	
+	for(int i = 0; i < )
+}
+
+TEST(PRIORITY,DELETE_QUEUE){
+	//~ TICKET_INVALID
+	
+	//try to delete a queue with a forged ticket
+	RESULT r = delete_queue(23131323);
+	EXPECT_EQ(r.code, TICKET_INVALID);
+	
+	WELCOME_PACKET w = create_queue();
+	
+	//delete a queue with a valid ticket
+	r = delete_queue(w.ticket);
+	EXPECT_EQ(r.code, SUCCESS);
+	
+	//try to delete an already deleted queue
+	r = delete_queue(w.ticket);
+	EXPECT_EQ(r.code, TICKET_INVALID);
+	
+}
+
 TEST(PRIORITY,QUEUE_ENQUEUE){
 	//~ QUEUE_DOES_NOT_EXIST
 	//~ QUEUE_IS_FULL
@@ -25,15 +53,42 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 	//create a valid queue
 	WELCOME_PACKET packet = create_queue();
 	
-	//try NULL item and priority
-	r = enqueue(NULL,packet.ticket);
-	EXPECT_EQ(r.code, ITEM_INVALID);
+	//~ //try NULL item and priority
+	//~ e = {NULL,NULL};
+	//~ 
+	//~ r = enqueue(e,packet.ticket);
+	//~ EXPECT_EQ(r.code, ITEM_INVALID);
 	
-	e = {NULL,NULL};
+	//try bad priority
+	e = {3,-1};
 	
 	r = enqueue(e,packet.ticket);
 	EXPECT_EQ(r.code, ITEM_INVALID);
 	
+	//try bad priority
+	e = {3,11};
+	
+	r = enqueue(e,packet.ticket);
+	EXPECT_EQ(r.code, ITEM_INVALID);
+	
+	//fill queue	
+	e = {2,4};
+	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
+		r = enqueue(e,packet.ticket);
+		EXPECT_EQ(r.code, SUCCESS);
+	}
+	
+	//add one to many to the queue
+	r = enqueue(e,packet.ticket);
+	EXPECT_EQ(r.code, QUEUE_IS_FULL);
+	
+	//delete the queue
+	r = delete_queue(packet.ticket);
+	EXPECT_EQ(r.code,SUCCESS);
+	
+	//try to enque on a deleted queue
+	r = enqueue(e,packet.ticket);
+	EXPECT_EQ(r.code, QUEUE_DOES_NOT_EXIST);
 	
 	
 }
@@ -42,15 +97,14 @@ TEST(PRIORITY_QUEUE,DEQUEUE){
 	//~ QUEUE_IS_EMPTY
     //~ QUEUE_DOES_NOT_EXIST
     //~ TOKEN_INVLAID
-    RESULT result = dequeue(424234);
-	EXPECT_EQ(result.code,TICKET_INVLAID);//or does not exist
-	EXPECT_EQ(result.element,NULL);
+    ELEMENT_RESULT ele_result = dequeue(424234);
+	EXPECT_EQ(ele_result.result.code,TICKET_INVLAID);//or does not exist
+	EXPECT_EQ(ele_result.element,NULL);
 	
 	
 	WELCOME_PACKET packet = create_queue();
-	RESULT result = dequeue(packet.ticket);
-	EXPECT_EQ(result.code,QUEUE_IS_EMPTY);
-	EXPECT_EQ(result.element,NULL);
+	ele_result = dequeue(packet.ticket);
+	EXPECT_EQ(ele_result.result.code,QUEUE_IS_EMPTY);
 	
 	for(int i = 1; i <= MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
 		ELEMENT e;
@@ -60,15 +114,19 @@ TEST(PRIORITY_QUEUE,DEQUEUE){
 	}
 	
 	for(int i = MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i >= 1; i--){
-		RESULT item = dequeue(packet.ticket);
+		ELEMENT_RESULT item = dequeue(packet.ticket);
 		EXPECT_EQ(item.element.item,i);
 		EXPECT_EQ(item.element.priority,i);
 	}
 	
-	RESULT result = dequeue(packet.ticket);
+	ELEMENT_RESULT result = dequeue(packet.ticket);
 	EXPECT_EQ(result.code,QUEUE_IS_EMPTY);
-	EXPECT_EQ(result.element,NULL);
 	
+	result = delete_queue(packet.ticket);
+	EXPECT_EQ(result.code,SUCCESS);
+	
+	ELEMENT_RESULT result = dequeue(packet.ticket);
+	EXPECT_EQ(result.code,QUEUE_IS_EMPTY);
 }
  
 TEST(PRIORITY_QUEUE,FULL){

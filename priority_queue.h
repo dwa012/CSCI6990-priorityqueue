@@ -24,6 +24,7 @@
  #define ITEM_INVALID				-7
  #define QUEUE_IS_EMPTY				-8
  #define QUEUE_CANNOT_BE_CREATED	-9
+ #define ITEM_COULD_NOT_BE_ADDED	-10
  
  typedef ulong QUEUE_TICKET; //used for the ticket of a queue
  //typedef char boolean; //a stand in type for a bool
@@ -100,9 +101,8 @@
   * 	The RESULT will contain a message and an RESULT code.
   *
   * RESULT CODES:
-  *		QUEUE_CANNOT_BE_DELETED
-  *		QUEUE_DOES_NOT_EXIST
-  *		TOKEN_INVALID
+  *		TICKET_INVALID
+  * 	SUCCESS
   ******************************************************/
  RESULT delete_queue(QUEUE_TICKET ticket);
  
@@ -129,10 +129,11 @@
   * 	RESULT message and RESULT code.
   * 
   * RESULT CODES:
-  * 	QUEUE_DOES_NOT_EXIST
+  * 	SUCCESS
   * 	QUEUE_IS_FULL
-  * 	TOKEN_INVLAID
+  * 	TICKET_INVLAID
   * 	ITEM_INVALID
+  * 	ITEM_COULD_NOT_BE_ADDED
   ******************************************************/
  RESULT enqueue(ELEMENT item, QUEUE_TICKET token);
  
@@ -155,9 +156,9 @@
   * 	contain a message and an RESULT code.
   * 
   * RESULT CODES:
+  * 	SUCCESS
   * 	QUEUE_IS_EMPTY
-  * 	QUEUE_DOES_NOT_EXIST
-  * 	TOKEN_INVLAID
+  * 	TICKET_INVLAID
   ******************************************************/
  ELEMENT_RESULT dequeue(QUEUE_TICKET token);
  
@@ -173,8 +174,8 @@
   * 	the token is full, else returns FALSE
   * 
   * RESULT CODES:
-  * 	QUEUE_DOES_NOT_EXIST
-  * 	TOKEN_INVLAID 
+  * 	SUCCESS
+  * 	TICKET_INVLAID 
   * 	QUEUE_IS_FULL
   * 	QUEUE_IS_NOT_FULL
   ******************************************************/
