@@ -10,7 +10,7 @@ TEST(PRIORITY,CREATE_QUEUE){
 	
 	WELCOME_PACKET wp[1023];
 	
-	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE-1; i++){
+	for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES -1; i++){
 		wp[i] = create_queue();
 		EXPECT_EQ(wp[i].result.code, SUCCESS);
 	}
@@ -20,11 +20,11 @@ TEST(PRIORITY,CREATE_QUEUE){
 	
 	//delete all created queues
 	delete_queue(w.ticket);
-	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE-1; i++)
+	for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES -1; i++)
 		delete_queue(wp[i].ticket);
 		
 	//create a full set of queues
-	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
+	for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++){
 		wp[i] = create_queue();
 		EXPECT_EQ(wp[i].result.code, SUCCESS);
 	}
@@ -49,7 +49,7 @@ TEST(PRIORITY,CREATE_QUEUE){
 	
 	//delete all created queues
 	delete_queue(w.ticket);
-	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE-1; i++)
+	for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++)
 		delete_queue(wp[i].ticket);
 }
 
@@ -72,73 +72,77 @@ TEST(PRIORITY,DELETE_QUEUE){
 	
 }
 
-//TEST(PRIORITY,QUEUE_ENQUEUE){
-	////~ QUEUE_DOES_NOT_EXIST
-	////~ QUEUE_IS_FULL
-	////~ TICKEN_INVLAID
-	////~ ITEM_INVALID
+//need to put stuff aobut size in dequeue
+//need to check the priority ordering for the enqueueing
+
+TEST(PRIORITY,QUEUE_ENQUEUE){
+	//~ QUEUE_DOES_NOT_EXIST
+	//~ QUEUE_IS_FULL
+	//~ TICKEN_INVLAID
+	//~ ITEM_INVALID
 	
-	////~ item != NULL && item.item != NULL &&
-	////~ item.priority != NULL && item.priority > 0
-	////~ item.priority < 10. item.priority is given as
-	////~ 0 is least urgent, and 10 is most urgent.
+	//~ item != NULL && item.item != NULL &&
+	//~ item.priority != NULL && item.priority > 0
+	//~ item.priority < 10. item.priority is given as
+	//~ 0 is least urgent, and 10 is most urgent.
 	
-	////try a bad ticket numbers
-	//ELEMENT e = {8,9};
+	//try a bad ticket numbers
+	ELEMENT e = {8,9};
 	
-	//RESULT r = enqueue(e,-313213);
-	//EXPECT_EQ(r.code, TICKET_INVALID);
+	RESULT r = enqueue(e,-313213);
+	EXPECT_EQ(r.code, TICKET_INVALID);
 	
-	//r = enqueue(e,0);
-	//EXPECT_EQ(r.code, TICKET_INVALID);
+	r = enqueue(e,0);
+	EXPECT_EQ(r.code, TICKET_INVALID);
 	
-	////create a valid queue
-	//WELCOME_PACKET packet = create_queue();
+	//create a valid queue
+	WELCOME_PACKET packet = create_queue();
 	
-	////~ //try NULL item and priority
-	////~ e = {NULL,NULL};
-	////~ 
-	////~ r = enqueue(e,packet.ticket);
-	////~ EXPECT_EQ(r.code, ITEM_INVALID);
+	//~ //try NULL item and priority
+	//~ e = {NULL,NULL};
+	//~ 
+	//~ r = enqueue(e,packet.ticket);
+	//~ EXPECT_EQ(r.code, ITEM_INVALID);
 	
-	////try bad priority
-	//e = {3,-1};
+	//try bad priority
+	e = {3,-1};
 	
-	//r = enqueue(e,packet.ticket);
-	//EXPECT_EQ(r.code, ITEM_INVALID);
+	r = enqueue(e,packet.ticket);
+	EXPECT_EQ(r.code, ITEM_INVALID);
 	
-	////try bad priority
-	//e = {3,11};
+	//try bad priority
+	e = {3,11};
 	
-	//r = enqueue(e,packet.ticket);
-	//EXPECT_EQ(r.code, ITEM_INVALID);
+	r = enqueue(e,packet.ticket);
+	EXPECT_EQ(r.code, ITEM_INVALID);
 	
-	////fill queue	
-	//e = {2,4};
-	//for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
-		//r = enqueue(e,packet.ticket);
-		//EXPECT_EQ(r.code, SUCCESS);
-	//}
+	//fill queue	
+	e = {2,4};
+	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
+		r = enqueue(e,packet.ticket);
+		EXPECT_EQ(get_size(packet.ticket),i+1);
+		EXPECT_EQ(r.code, SUCCESS);
+	}
 	
-	////add one to many to the queue
-	//r = enqueue(e,packet.ticket);
-	//EXPECT_EQ(r.code, QUEUE_IS_FULL);
+	//add one to many to the queue
+	r = enqueue(e,packet.ticket);
+	EXPECT_EQ(r.code, QUEUE_IS_FULL);
 	
-	////delete the queue
-	//r = delete_queue(packet.ticket);
-	//EXPECT_EQ(r.code,SUCCESS);
+	//delete the queue
+	r = delete_queue(packet.ticket);
+	EXPECT_EQ(r.code,SUCCESS);
 	
-	////try to enque on a deleted queue
-	//r = enqueue(e,packet.ticket);
-	//EXPECT_EQ(r.code, QUEUE_DOES_NOT_EXIST);
+	//try to enque on a deleted queue
+	r = enqueue(e,packet.ticket);
+	EXPECT_EQ(r.code, QUEUE_DOES_NOT_EXIST);
 	
 	
-//}
+}
 
 //TEST(PRIORITY_QUEUE,DEQUEUE){
 	////~ QUEUE_IS_EMPTY
-    ////~ QUEUE_DOES_NOT_EXIST
-    ////~ TOKEN_INVLAID
+    ////~ SUCCESS
+    ////~ TICKET_INVLAID
     //ELEMENT_RESULT ele_result = dequeue(424234);
 	//EXPECT_EQ(ele_result.result.code,TICKET_INVLAID);//or does not exist
 	//EXPECT_EQ(ele_result.element,NULL);
@@ -215,3 +219,24 @@ TEST(PRIORITY,DELETE_QUEUE){
 	
 //}
 
+//TEST(PRIORITY,GET_SIZE){
+	////~ SUCCESS
+	////~ TICKET_INVLAID 
+	//SIZE_RESULT sr;
+	//ELEMENT e = {2,4};
+	//WELCOME_PACKET wp = create_queue();
+	
+	//sr = get_size(wp.ticket);
+	//EXPECT_EQ(sr.size,0);
+	
+	//for(int i = 1; i <= MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
+		//enqueue(e,wp.ticket);
+		//EXPECT_EQ(get_size(wp.ticket).size, i);
+	//}
+	
+	//for(int i = MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i > 0; i--){
+		//dequeue(wp.ticket);
+		//EXPECT_EQ(get_size(wp.ticket).size, i-1);
+	//}
+	
+//}
