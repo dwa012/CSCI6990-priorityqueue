@@ -16,7 +16,7 @@ priority_queue.o: priority_queue.c priority_queue.h
 	$(CC) $(CFLAGS) priority_queue.c
 	
 #THIS NEXT SECTION IS FOR THE TEST PROGRAM
-test: priority_queue_test.o
+test: clean priority_queue_test.o
 	g++ -Igtest-1.6.0/include -Lgtest-1.6.0/lib priority_queue_test.o gtest-1.6.0/src/gtest_main.cc -o test -lpthread -lgtest
 
 priority_queue_test.o:

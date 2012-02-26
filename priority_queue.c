@@ -1,31 +1,45 @@
  #include "priority_queue.h"
  #include "stdio.h"
-
+ 
+ /************ INTERNAL DEFINES ************/
  #define MAXIMUM_NUMBER_OF_QUEUES 				1024
  #define MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE	1024
 
  #define INDEX_OFFSET 0x1221	//Value for obfuscating index in queue_ticket
  #define START_NONCE 0x0502		//Start value for nonce used in queue_ticket
+ /********** END INTERNAL DEFINES **********/
 
-typedef struct node 
-{
-	struct node* pNext;
+ /************ INTERNAL STRUCTS ************/
+ typedef struct node 
+ {
+ 	struct node* pNext;
 	struct node* pPrev;
 	ELEMENT item;
-} NODE;
-typedef struct priority_queue 
-{
+ } NODE;
+ 
+ typedef struct priority_queue 
+ {
 	NODE* head;
 	NODE* tail;
 	uint size;
 	QUEUE_TICKET ticket;
-} PRIORITY_QUEUE;
+ } PRIORITY_QUEUE;
 
-typedef struct queue_manager 
-{
+ typedef struct queue_manager 
+ {
 	PRIORITY_QUEUE* queues[MAXIMUM_NUMBER_OF_QUEUES];
 	uint size;
-}QUEUE_MANAGER;
+ }QUEUE_MANAGER;
+ /************ END INTERNAL STRUCTS ************/
+ 
+ /************ INTERNAL PROTOTYPES ************/
+ static int find_open_slot();
+ static QUEUE_TICKET create_ticket(uint index);
+ static int decrypt_ticket(QUEUE_TICKET ticket);
+ static ELEMENT remove_one_element(PRIORITY_QUEUE* pQueue);
+ static RESULT set_result(int resultCode, char* message);
+ static PRIORITY_QUEUE* redeem_ticket(QUEUE_TICKET ticket);
+ /********** END INTERNAL PROTOTYPES ************/
 
 static uint nonce = START_NONCE;	//Nonce counter for queue ticket creation
 static QUEUE_MANAGER queue_guard;	//Guard for queue, obfuscates the location of the queue
@@ -90,13 +104,14 @@ WELCOME_PACKET create_queue()
 	QUEUE_TICKET ticket = 0;
 	outcome.result = set_result(SUCCESS,"");
 	PRIORITY_QUEUE* pQueue = NULL;
+	int index = find_open_slot();
 	
-	if(queue_guard.size >= MAXIMUM_NUMBER_OF_QUEUES)
+	if(index == -1)
 		outcome.result = set_result(QUEUE_CANNOT_BE_CREATED, "Exceeded maximum number of queues");
 	
 	if(outcome.result.code == SUCCESS)		//Using outcome's error flag to avoid nested if-else
 	{//Create a ticket
-		ticket = create_ticket(queue_guard.size);
+		ticket = create_ticket(index);
 		if(ticket == 0)
 			outcome.result = set_result(QUEUE_CANNOT_BE_CREATED, "Ticket creation failed");
 	}
@@ -165,59 +180,61 @@ SIZE_RESULT get_size(QUEUE_TICKET ticket)
 
 RESULT enqueue(ELEMENT item, QUEUE_TICKET ticket)
 {
-	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
-	NODE* pNode;
-	RESULT outcome = set_result(SUCCESS,"");
-	if(pQueue == NULL)
-		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
-	else if(pQueue->size >= MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE)
-		outcome = set_result(QUEUE_IS_FULL,"Cannot add to full queue");
-	else
-	{
-		pNode = (NODE*)malloc(sizeof(NODE));
-		if(pNode == NULL)
-			outcome = set_result(OUT_OF_MEMORY, "Failed to allocate memory");
-	}
-		
-	if(outcome.code == SUCCESS)
-	{
-	
-	}
-		
-		queue_guard.queues[decrypt_ticket(ticket)] = NULL;	//TODO:refactor?
-		queue_guard.size--;
-		NODE* pNext;
-		NODE* pCur = pQueue->tail;
-		while (pCur != NULL)
-		{//Traverse linked list freeing nodes
-			pNext = pCur->pNext;
-			free(pCur);
-			pCur = pNext;
-		}
-		free(pQueue);
-	}
-	else
-	return outcome;
+	RESULT r =  {"",0};
+	return r;
 }
 
 ELEMENT_RESULT dequeue(QUEUE_TICKET ticket){
-	ELEMENT_RESULT the_result;
+	ELEMENT_RESULT the_result; //the result of the dequeue
 	
+	//set the element to a zero item, and a 0 priority
 	the_result.element = {0,0};
 	
+	//get the queue represented by the ticket
 	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
-	NODE* pNode;
+	//the result to unclude in the ELEMENT_RESULT being returned
 	RESULT outcome = set_result(SUCCESS,"");
 	
-	if(pQueue == NULL)
+	if(pQueue == NULL) //if NULL the mark it as an error
 		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
-	else if(pQueue->size == 0)
+	else if(pQueue->size == 0) //if the size is 0 then mark an error
 		outcome = set_result(QUEUE_IS_EMPTY,"Cannot dequeue from an empty queue");
 	else{
-		EL
+		//if the ticket is valid and the size > 0 thne remove one element
+		the_result.element = remove_one_element(pQueue);
 	}
 	
+	//add the RESULT to the return
 	the_result.result = outcome;
-		
+	
+	return the_result;
 
+}
+
+static int find_open_slot(){
+	int result = -1;
+	int index;
+	
+	for(index = 0; index < MAXIMUM_NUMBER_OF_QUEUES && result == -1; index++)
+		if(queue_guard.queues[index] == NULL)
+			result = index;
+			
+	return result;
+}
+
+static ELEMENT remove_one_element(PRIORITY_QUEUE* pQueue){
+	ELEMENT result =  pQueue->head->item;
+	NODE* temp_node = pQueue->head;
+	pQueue->head = pQueue->head->pPrev;
+	
+	if(pQueue->size > 1)
+		pQueue->head->pNext = NULL;
+	else
+		pQueue->tail = NULL;
+		
+	free(temp_node);
+	
+	pQueue->size = pQueue->size - 1;
+	
+	return result;
 }

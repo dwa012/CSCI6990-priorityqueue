@@ -153,8 +153,6 @@
   * RESULT CODES:
   * 	SUCCESS
   * 	QUEUE_IS_EMPTY
-  * 	QUEUE_DOES_NOT_EXIST
-  * 	QUEUE_PREVIOUSLY_DELETED
   * 	TICKET_INVLAID
   ******************************************************/
  ELEMENT_RESULT dequeue(QUEUE_TICKET token);
