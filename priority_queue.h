@@ -14,20 +14,11 @@
 
  //RESULT defines
  #define SUCCESS					 1
-<<<<<<< HEAD
- #define QUEUE_CANNOT_BE_DELETED	-1
- #define QUEUE_PREVIOUSLY_DELETED	-2
- #define TICKET_INVALID				-3
- #define QUEUE_DOES_NOT_EXIST		-4
-=======
  #define TICKET_INVALID				-1
 
->>>>>>> daniel
  #define QUEUE_IS_FULL				-5
- #define QUEUE_IS_NOT_FULL			-6
  #define ITEM_INVALID				-7
  #define QUEUE_IS_EMPTY				-8
- #define ITEM_INVALID				-7
  #define QUEUE_CANNOT_BE_CREATED	-9
 
  typedef unsigned int uint; 
