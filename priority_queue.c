@@ -43,7 +43,7 @@
  /********** END INTERNAL PROTOTYPES ************/
 
 static uint nonce = START_NONCE;	//Nonce counter for queue ticket creation
-static QUEUE_MANAGER queue_guard;	//Guard for queue, obfuscates the location of the queue
+static QUEUE_MANAGER queue_guard = {NULL,0};	//Guard for queue, obfuscates the location of the queue
 
 static RESULT set_result(int resultCode, char* message)
 {
@@ -117,8 +117,11 @@ WELCOME_PACKET create_queue()
 	PRIORITY_QUEUE* pQueue = NULL;
 	int index = find_open_slot();
 	
-	printf("index: %d\n",index);
-	printf("queue is null?: %d\n\n",queue_guard.queues[index] == NULL);
+	if(queue_guard.queues[index] != NULL)
+	  printf("found not NULL at %d\n",index);
+	
+	//printf("index: %d\n",index);
+	//printf("queue is null?: %d\n\n",queue_guard.queues[index] == NULL);
 	
 	if(index == -1)
 		outcome.result = set_result(QUEUE_CANNOT_BE_CREATED, "Exceeded maximum number of queues");
@@ -144,7 +147,7 @@ WELCOME_PACKET create_queue()
 		pQueue->head = NULL;
 		pQueue->tail = NULL;
 
-		queue_guard.queues[queue_guard.size] = pQueue;
+		queue_guard.queues[index] = pQueue;
 		queue_guard.size++;		
 	}
 	outcome.ticket = ticket;
