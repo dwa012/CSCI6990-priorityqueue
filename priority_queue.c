@@ -46,7 +46,7 @@ static QUEUE_TICKET create_ticket(uint index)
 
 	while(low == 0){			//Assign nonce such that it's non-trivial, try again if it is
 		low = nonce & 0xffff;	//Cut off upper 16 bits of nonce
-		nonce = nonce +1;
+		nonce = nonce + 1;
 	}
 
 	high = (index + INDEX_OFFSET) & 0x7fff;	//Obfuscate index, force positive and cuts to 16 bits
@@ -86,44 +86,46 @@ static PRIORITY_QUEUE* redeem_ticket(QUEUE_TICKET ticket)
 WELCOME_PACKET create_queue()
 {//Create a new queue in the queue manager returning its ticket
 //TODO:refactor
-	RESULT outcome;
+	WELCOME_PACKET outcome;
 	QUEUE_TICKET ticket = 0;
+	outcome.result = set_result(SUCCESS,"");
+	PRIORITY_QUEUE* pQueue = NULL;
+	
 	if(queue_guard.size >= MAXIMUM_NUMBER_OF_QUEUES)
-		outcome = set_result(QUEUE_CANNOT_BE_CREATED, "Exceeded maximum number of queues");
-	else
-	{
-		PRIORITY_QUEUE* pQueue = (PRIORITY_QUEUE*) malloc(sizeof(PRIORITY_QUEUE));
-		if(pQueue == NULL)
-			outcome = set_result(QUEUE_CANNOT_BE_CREATED, "Failed to allocate memory");
-		else
-		{
-			ticket = create_ticket(queue_guard.size);
-			if(ticket == 0)
-				outcome = set_result(QUEUE_CANNOT_BE_CREATED, "Ticket creation failed");
-			else
-			{
-				pQueue->ticket = ticket;
-				pQueue->size = 0;
-				pQueue->head = NULL;
-				pQueue->tail = NULL;
-
-				queue_guard.queues[queue_guard.size] = pQueue;
-				queue_guard.size++;
-				
-				outcome = set_result(SUCCESS,"");
-			}
-		}
+		outcome.result = set_result(QUEUE_CANNOT_BE_CREATED, "Exceeded maximum number of queues");
+	
+	if(outcome.result.code == SUCCESS)		//Using outcome's error flag to avoid nested if-else
+	{//Create a ticket
+		ticket = create_ticket(queue_guard.size);
+		if(ticket == 0)
+			outcome.result = set_result(QUEUE_CANNOT_BE_CREATED, "Ticket creation failed");
 	}
-	WELCOME_PACKET output;
-	output.result = outcome;
+	
+	if(outcome.result.code == SUCCESS)
+	{//Malloc new queue
+		pQueue = (PRIORITY_QUEUE*) malloc(sizeof(PRIORITY_QUEUE));
+		if(pQueue == NULL)
+			outcome.result = set_result(OUT_OF_MEMORY, "Failed to allocate memory");
+	}
+	
+	if(outcome.result.code == SUCCESS)
+	{//Initialize new queue
+		pQueue->ticket = ticket;
+		pQueue->size = 0;
+		pQueue->head = NULL;
+		pQueue->tail = NULL;
+
+		queue_guard.queues[queue_guard.size] = pQueue;
+		queue_guard.size++;		
+	}
 	output.ticket = ticket;
 	return output;
 }
 
 RESULT delete_queue(QUEUE_TICKET ticket)
-{
+{//Frees a queue struct and it's associated memory
 	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
-	RESULT outcome;
+	RESULT outcome = set_result(SUCCESS,"");
 	if(pQueue != NULL)
 	{//Found the queue, delete it
 		queue_guard.queues[decrypt_ticket(ticket)] = NULL;	//TODO:refactor?
@@ -137,7 +139,6 @@ RESULT delete_queue(QUEUE_TICKET ticket)
 			pCur = pNext;
 		}
 		free(pQueue);
-		outcome = set_result(SUCCESS,"");
 	}
 	else
 		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
@@ -161,3 +162,41 @@ SIZE_RESULT get_size(QUEUE_TICKET ticket)
 	return outcome;	
 }
 
+RESULT enqueue(ELEMENT item, QUEUE_TICKET token)
+{
+	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
+	NODE* pNode
+	RESULT outcome = set_result(SUCCESS,"");
+	if(pQueue == NULL)
+		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
+	else if(pQueue->size >= MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE)
+		outcome = set_result(QUEUE_IS_FULL,"Cannot add to full queue");
+	else
+	{
+		pNode = (NODE*)malloc(sizeof(NODE));
+		if(pNode == NULL)
+			outcome = set_result(OUT_OF_MEMORY, "Failed to allocate memory");
+	}
+		
+	if(outcome.code == SUCCESS)
+	{
+	
+	}
+		
+		queue_guard.queues[decrypt_ticket(ticket)] = NULL;	//TODO:refactor?
+		queue_guard.size--;
+		NODE* pNext;
+		NODE* pCur = pQueue->tail;
+		while (pCur != NULL)
+		{//Traverse linked list freeing nodes
+			pNext = pCur->pNext;
+			free(pCur);
+			pCur = pNext;
+		}
+		free(pQueue);
+	}
+	else
+	return outcome;
+}
+
+ELEMENT_RESULT dequeue(QUEUE_TICKET token);
