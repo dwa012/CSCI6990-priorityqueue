@@ -6,11 +6,14 @@
 
  #define INDEX_OFFSET 0x1221	//Value for obfuscating index in queue_ticket
  #define START_NONCE 0x0502		//Start value for nonce used in queue_ticket
+ #define TRUE 1
+ #define FALSE 0
 
+typedef char boolean;
 typedef struct node 
 {
 	struct node* pNext;
-	struct node* pPrev;
+	struct node* pPrev;	
 	ELEMENT item;
 } NODE;
 typedef struct priority_queue 
@@ -96,7 +99,7 @@ WELCOME_PACKET create_queue()
 	
 	if(outcome.result.code == SUCCESS)		//Using outcome's error flag to avoid nested if-else
 	{//Create a ticket
-		ticket = create_ticket(queue_guard.size);
+		ticket = create_ticket(queue_guard.size);//BUG: see board (what if deletion was from middle of queue
 		if(ticket == 0)
 			outcome.result = set_result(QUEUE_CANNOT_BE_CREATED, "Ticket creation failed");
 	}
@@ -118,8 +121,8 @@ WELCOME_PACKET create_queue()
 		queue_guard.queues[queue_guard.size] = pQueue;
 		queue_guard.size++;		
 	}
-	output.ticket = ticket;
-	return output;
+	outcome.ticket = ticket;
+	return outcome;
 }
 
 RESULT delete_queue(QUEUE_TICKET ticket)
@@ -129,7 +132,7 @@ RESULT delete_queue(QUEUE_TICKET ticket)
 	if(pQueue != NULL)
 	{//Found the queue, delete it
 		queue_guard.queues[decrypt_ticket(ticket)] = NULL;	//TODO:refactor?
-		queue_guard.size--;
+		queue_guard.size -= 1;
 		NODE* pNext;
 		NODE* pCur = pQueue->tail;
 		while (pCur != NULL)
@@ -162,13 +165,66 @@ SIZE_RESULT get_size(QUEUE_TICKET ticket)
 	return outcome;	
 }
 
-RESULT enqueue(ELEMENT item, QUEUE_TICKET token)
+static void insert_node(PRIORITY_QUEUE* pQueue, NODE* pNode)
+{//TODO: refactor
+	boolean finished = FALSE;
+	if(pQueue->tail == NULL)
+	{//Insert into empty list
+		pQueue->tail = pNode;
+		pQueue->head = pNode;
+		pNode->pNext = NULL;
+		pNode->pPrev = NULL;
+		finished = TRUE;
+	}
+	NODE* curNode = pQueue->tail;
+	while(finished == FALSE
+		&& curNode != NULL)
+	{
+		if(curNode->item.priority < pNode->item.priority)
+			curNode=curNode->pNext;	//Iterate to next node
+		else
+		{//Insert new node before curNode
+
+			//Update new node's links
+			pNode->pPrev = curNode->pPrev;
+			pNode->pNext = curNode;
+
+			//Update prior node's links
+			pNode->pPrev->pNext = pNode;
+
+			//Update curNode's links
+			curNode->pPrev = pNode;
+
+			finished = TRUE;
+		}
+	}
+	if(finished == FALSE)
+	{//Hit end of list, add to end
+		curNode = pQueue->head;	//Add after the curNode
+
+			//Update new node's links
+			pNode->pPrev = curNode;
+			pNode->pNext = NULL;
+
+			//Update curNode's links
+			curNode->pNext = pNode;
+
+			//Update head link
+			pQueue->head = pNode;		
+	}
+
+	pQueue->size += 1;
+}
+
+RESULT enqueue(ELEMENT item, QUEUE_TICKET ticket)
 {
 	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
-	NODE* pNode
+	NODE* pNode;
 	RESULT outcome = set_result(SUCCESS,"");
 	if(pQueue == NULL)
 		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
+	else if(item.priority > 10)
+		outcome = set_result(ITEM_INVALID,"Priority outside of legal range");
 	else if(pQueue->size >= MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE)
 		outcome = set_result(QUEUE_IS_FULL,"Cannot add to full queue");
 	else
@@ -180,22 +236,9 @@ RESULT enqueue(ELEMENT item, QUEUE_TICKET token)
 		
 	if(outcome.code == SUCCESS)
 	{
-	
+		pNode->item = item;
+		insert_node(pQueue, pNode);
 	}
-		
-		queue_guard.queues[decrypt_ticket(ticket)] = NULL;	//TODO:refactor?
-		queue_guard.size--;
-		NODE* pNext;
-		NODE* pCur = pQueue->tail;
-		while (pCur != NULL)
-		{//Traverse linked list freeing nodes
-			pNext = pCur->pNext;
-			free(pCur);
-			pCur = pNext;
-		}
-		free(pQueue);
-	}
-	else
 	return outcome;
 }
 
