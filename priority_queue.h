@@ -14,12 +14,12 @@
 
  //RESULT defines
  #define SUCCESS					 1
- #define TICKET_INVALID				-1
-
- #define QUEUE_IS_FULL				-5
- #define ITEM_INVALID				-7
- #define QUEUE_IS_EMPTY				-8
- #define QUEUE_CANNOT_BE_CREATED	-9
+ #define OUT_OF_MEMORY				-1
+ #define TICKET_INVALID				-2
+ #define ITEM_INVALID				-3
+ #define QUEUE_IS_FULL				-4
+ #define QUEUE_IS_EMPTY				-5
+ #define QUEUE_CANNOT_BE_CREATED	-6
 
  typedef unsigned int uint; 
  typedef unsigned long QUEUE_TICKET; //used for the ticket of a queue
