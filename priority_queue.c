@@ -35,6 +35,7 @@
  /************ INTERNAL PROTOTYPES ************/
  static int find_open_slot();
  static QUEUE_TICKET create_ticket(uint index);
+ static void free_queue(PRIORITY_QUEUE* pQueue);
  static int decrypt_ticket(QUEUE_TICKET ticket);
  static ELEMENT remove_one_element(PRIORITY_QUEUE* pQueue);
  static RESULT set_result(int resultCode, char* message);
@@ -89,7 +90,12 @@ static PRIORITY_QUEUE* redeem_ticket(QUEUE_TICKET ticket)
 	if(index < MAXIMUM_NUMBER_OF_QUEUES	//If index is in valid queue range
 		&& index >= 0)
 		pQueue = queue_guard.queues[index];	//Get queue at index from manager
-
+	else//DEBUG
+		printf("failed in redeem, outside range\n");
+	if(pQueue==NULL)//DEBUG
+		printf("failed in redeem, not found\n");
+	if(pQueue->ticket != ticket)//DEBUG
+		printf("failed in redeem, tickets dont match... queueTicket:%u   providedTicket:%u\n",pQueue->ticket, ticket);
 	if(pQueue != NULL
 		&& pQueue->ticket != ticket)	//If queue wasn't found or ticket didn't match queue's copy
 		pQueue = NULL;					//Setup to return NULL
@@ -100,11 +106,19 @@ static PRIORITY_QUEUE* redeem_ticket(QUEUE_TICKET ticket)
 WELCOME_PACKET create_queue()
 {//Create a new queue in the queue manager returning its ticket
 //TODO:refactor
+	//int i;
+	//for(i  = 0; i < MAXIMUM_NUMBER_OF_QUEUES; i++ )
+		//if(queue_guard.queues[i] != NULL)
+			//printf("found not NULL at %d\n",i);
+	
 	WELCOME_PACKET outcome;
 	QUEUE_TICKET ticket = 0;
 	outcome.result = set_result(SUCCESS,"");
 	PRIORITY_QUEUE* pQueue = NULL;
 	int index = find_open_slot();
+	
+	printf("index: %d\n",index);
+	printf("queue is null?: %d\n\n",queue_guard.queues[index] == NULL);
 	
 	if(index == -1)
 		outcome.result = set_result(QUEUE_CANNOT_BE_CREATED, "Exceeded maximum number of queues");
@@ -141,22 +155,20 @@ RESULT delete_queue(QUEUE_TICKET ticket)
 {//Frees a queue struct and it's associated memory
 	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
 	RESULT outcome = set_result(SUCCESS,"");
+	//printf("ticket as seen in delete: %u\n",ticket);
+	//if ticket returns a valid queue
 	if(pQueue != NULL)
 	{//Found the queue, delete it
+	
+		//remove refernce in the array of queues
 		queue_guard.queues[decrypt_ticket(ticket)] = NULL;	//TODO:refactor?
-		queue_guard.size--;
-		NODE* pNext;
-		NODE* pCur = pQueue->tail;
-		while (pCur != NULL)
-		{//Traverse linked list freeing nodes
-			pNext = pCur->pNext;
-			free(pCur);
-			pCur = pNext;
-		}
-		free(pQueue);
+		queue_guard.size = queue_guard.size - 1; //decrement the size
+		
+		free_queue(pQueue);
 	}
 	else
 		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
+		
 	return outcome;
 }
 
@@ -237,4 +249,24 @@ static ELEMENT remove_one_element(PRIORITY_QUEUE* pQueue){
 	pQueue->size = pQueue->size - 1;
 	
 	return result;
+}
+
+static void free_queue(PRIORITY_QUEUE* pQueue){
+	NODE* pNext;
+	NODE* pCur = pQueue->tail;
+	
+	//Traverse linked list freeing each node
+	while (pCur != NULL)
+	{
+		//set the next node to traverse to
+		pNext = pCur->pNext;
+		//free the current node
+		free(pCur);
+		//swap the current with the next node
+		pCur = pNext;
+		
+	}//end while
+	
+	//free the queue
+	free(pQueue);
 }

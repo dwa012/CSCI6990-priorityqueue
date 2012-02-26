@@ -8,49 +8,48 @@
 TEST(PRIORITY,CREATE_QUEUE){
 	//~ QUEUE_CANNOT_BE_CREATED
 	//~ SUCCESS
+	
 	WELCOME_PACKET w = create_queue();
-	EXPECT_EQ(w.result.code, SUCCESS);
+	delete_queue(w.ticket);
+	WELCOME_PACKET wp[1024];
 	
-	WELCOME_PACKET wp[1023];
-	
-	for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES -1; i++){
+	for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++){
 	//for(int i = 0; i < 1; i++){
 		wp[i] = create_queue();
 		EXPECT_EQ(wp[i].result.code, SUCCESS);
 	}
 	
-	WELCOME_PACKET p = create_queue();
-	EXPECT_EQ(p.result.code,QUEUE_CANNOT_BE_CREATED);
+	//WELCOME_PACKET p = create_queue();
+	//EXPECT_EQ(p.result.code,QUEUE_CANNOT_BE_CREATED);
 	
-	//delete all created queues
-	delete_queue(w.ticket);
-	for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES -1; i++)
-	//for(int i = 0; i < 1; i++)
-		EXPECT_EQ(delete_queue(wp[i].ticket).code,SUCCESS);
+	//for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++)
+	////for(int i = 0; i < 1; i++)
+		//EXPECT_EQ(delete_queue(wp[i].ticket).code,SUCCESS);
 		
-	//create a full set of queues
-	for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++){
-		wp[i] = create_queue();
-		EXPECT_EQ(wp[i].result.code, SUCCESS);
-	}
-	//~ 
-	//~ //delete some random queues and try to recreate them
-	//~ delete_queue(wp[0].ticket);
-	//~ delete_queue(wp[1024].ticket);
-	//~ delete_queue(wp[64].ticket);
-	//~ delete_queue(wp[800].ticket);
-	//~ 
-	//~ wp[0] = create_queue();
-	//~ EXPECT_EQ(wp[0].result.code,SUCCESS);
-	//~ 
-	//~ wp[1024] = create_queue();
-	//~ EXPECT_EQ(wp[1024].result.code,SUCCESS);
-	//~ 
-	//~ wp[64] = create_queue();
-	//~ EXPECT_EQ(wp[64].result.code,SUCCESS);
-	//~ 
-	//~ wp[800] = create_queue();
-	//~ EXPECT_EQ(wp[800].result.code,SUCCESS);
+		
+	////create a full set of queues
+	//for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++){
+		//wp[i] = create_queue();
+		//EXPECT_EQ(wp[i].result.code, SUCCESS);
+	//}
+	
+	////delete some random queues and try to recreate them
+	//delete_queue(wp[0].ticket);
+	//delete_queue(wp[1023].ticket);
+	//delete_queue(wp[64].ticket);
+	//delete_queue(wp[800].ticket);
+	
+	//wp[0] = create_queue();
+	//EXPECT_EQ(wp[0].result.code,SUCCESS);
+	
+	//wp[1023] = create_queue();
+	//EXPECT_EQ(wp[1023].result.code,SUCCESS);
+	
+	//wp[64] = create_queue();
+	//EXPECT_EQ(wp[64].result.code,SUCCESS);
+	
+	//wp[800] = create_queue();
+	//EXPECT_EQ(wp[800].result.code,SUCCESS);
 	
 	//delete all created queues
 	for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++)
@@ -58,19 +57,21 @@ TEST(PRIORITY,CREATE_QUEUE){
 }
 
 //TEST(PRIORITY,DELETE_QUEUE){
-	////~ TICKET_INVALID
+	//~ TICKET_INVALID
 	
-	////try to delete a queue with a forged ticket
-	//RESULT r = delete_queue(23131323);
+	//try to delete a queue with a forged ticket
+	//RESULT r ;//= delete_queue(23131323);
 	//EXPECT_EQ(r.code, TICKET_INVALID);
 	
 	//WELCOME_PACKET w = create_queue();
+	//EXPECT_EQ(w.result.code, SUCCESS);
 	
-	////delete a queue with a valid ticket
+	//delete a queue with a valid ticket
 	//r = delete_queue(w.ticket);
+	//printf("ticket: %u \n %s\n",w.ticket,r.message);
 	//EXPECT_EQ(r.code, SUCCESS);
 	
-	////try to delete an already deleted queue
+	//try to delete an already deleted queue
 	//r = delete_queue(w.ticket);
 	//EXPECT_EQ(r.code, TICKET_INVALID);
 	
