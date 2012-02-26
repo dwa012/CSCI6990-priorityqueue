@@ -93,8 +93,11 @@ static PRIORITY_QUEUE* redeem_ticket(QUEUE_TICKET ticket)
 	else//DEBUG
 		printf("failed in redeem, outside range\n");
 	if(pQueue==NULL)//DEBUG
-		printf("failed in redeem, not found\n");
-	if(pQueue->ticket != ticket)//DEBUG
+	{
+		printf("failed in redeem, not found... index:%d\n",index);
+		printf("...at index, isNULL? %d",pQueue==NULL);
+	}
+	else if(pQueue->ticket != ticket)//DEBUG
 		printf("failed in redeem, tickets dont match... queueTicket:%u   providedTicket:%u\n",pQueue->ticket, ticket);
 	if(pQueue != NULL
 		&& pQueue->ticket != ticket)	//If queue wasn't found or ticket didn't match queue's copy
@@ -106,26 +109,21 @@ static PRIORITY_QUEUE* redeem_ticket(QUEUE_TICKET ticket)
 WELCOME_PACKET create_queue()
 {//Create a new queue in the queue manager returning its ticket
 //TODO:refactor
-	//int i;
-	//for(i  = 0; i < MAXIMUM_NUMBER_OF_QUEUES; i++ )
-		//if(queue_guard.queues[i] != NULL)
-			//printf("found not NULL at %d\n",i);
-	
 	WELCOME_PACKET outcome;
 	QUEUE_TICKET ticket = 0;
 	outcome.result = set_result(SUCCESS,"");
 	PRIORITY_QUEUE* pQueue = NULL;
-	int index = find_open_slot();
-	
-	printf("index: %d\n",index);
-	printf("queue is null?: %d\n\n",queue_guard.queues[index] == NULL);
-	
-	if(index == -1)
+	int indexFound = find_open_slot();
+		
+	if(indexFound == -1)
+	{
 		outcome.result = set_result(QUEUE_CANNOT_BE_CREATED, "Exceeded maximum number of queues");
+		printf("create_queue: exceeded max queues, Queue_guard size: %d",queue_guard.size);//DEBUG
+	}
 	
 	if(outcome.result.code == SUCCESS)		//Using outcome's error flag to avoid nested if-else
 	{//Create a ticket
-		ticket = create_ticket(index);
+		ticket = create_ticket(indexFound);
 		if(ticket == 0)
 			outcome.result = set_result(QUEUE_CANNOT_BE_CREATED, "Ticket creation failed");
 	}
@@ -134,7 +132,10 @@ WELCOME_PACKET create_queue()
 	{//Malloc new queue
 		pQueue = (PRIORITY_QUEUE*) malloc(sizeof(PRIORITY_QUEUE));
 		if(pQueue == NULL)
+		{
 			outcome.result = set_result(OUT_OF_MEMORY, "Failed to allocate memory");
+			printf("create_queue: Queue malloc failed");//DEBUG
+		}
 	}
 	
 	if(outcome.result.code == SUCCESS)
@@ -144,7 +145,7 @@ WELCOME_PACKET create_queue()
 		pQueue->head = NULL;
 		pQueue->tail = NULL;
 
-		queue_guard.queues[queue_guard.size] = pQueue;
+		queue_guard.queues[indexFound] = pQueue;
 		queue_guard.size++;		
 	}
 	outcome.ticket = ticket;
@@ -152,22 +153,24 @@ WELCOME_PACKET create_queue()
 }
 
 RESULT delete_queue(QUEUE_TICKET ticket)
-{//Frees a queue struct and it's associated memory
-	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
+{//Free a queue struct and it's associated memory
 	RESULT outcome = set_result(SUCCESS,"");
-	//printf("ticket as seen in delete: %u\n",ticket);
-	//if ticket returns a valid queue
+	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
+
+	//Ticket returned a valid queue, delete it
 	if(pQueue != NULL)
-	{//Found the queue, delete it
-	
-		//remove refernce in the array of queues
-		queue_guard.queues[decrypt_ticket(ticket)] = NULL;	//TODO:refactor?
-		queue_guard.size = queue_guard.size - 1; //decrement the size
+	{	
+		queue_guard.queues[decrypt_ticket(ticket)] = NULL;	//remove refernce in the array of queues
+		printf("delete_queue: assign null to array properly?... %d",redeem_ticket(ticket)==NULL);//DEBUG
+		queue_guard.size = queue_guard.size - 1;	//decrement the size
 		
 		free_queue(pQueue);
 	}
 	else
+	{
 		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
+		printf("delete_queue: call to redeem returned null pointer");//DEBUG
+	}
 		
 	return outcome;
 }
