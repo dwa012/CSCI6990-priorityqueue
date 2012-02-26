@@ -13,9 +13,9 @@ TEST(PRIORITY,CREATE_QUEUE){
 	delete_queue(w.ticket);
 	WELCOME_PACKET wp[1024];
 
-	for(int j = 0; j < 100000; j++){
-	///	if(j%1000 == 0)
-		
+	for(int j = 0; j < 10; j++){
+		if(j%1000 == 0)
+			printf("stress iteration: %d\n",j);
 		for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++){
 		//for(int i = 0; i < 1; i++){
 			wp[i] = create_queue();
@@ -25,14 +25,16 @@ TEST(PRIORITY,CREATE_QUEUE){
 		for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++)
 			EXPECT_EQ(delete_queue(wp[i].ticket).code, SUCCESS);
 	}
-	printf("done stress testing");
+	
+	printf("done stress testing\n");
 	
 	//WELCOME_PACKET p = create_queue();
 	//EXPECT_EQ(p.result.code,QUEUE_CANNOT_BE_CREATED);
 	
-	//for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++)
-	////for(int i = 0; i < 1; i++)
-		//EXPECT_EQ(delete_queue(wp[i].ticket).code,SUCCESS);
+	for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++)
+	//for(int i = 0; i < 1; i++)
+		delete_queue(wp[i].ticket);
+		//EXPECT_EQ(delete_queue(wp[i].ticket).code,TICKET_INVALID);
 		
 		
 	//create a full set of queues

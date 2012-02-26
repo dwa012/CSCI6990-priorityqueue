@@ -85,19 +85,25 @@ static int decrypt_ticket(QUEUE_TICKET ticket)
 static PRIORITY_QUEUE* redeem_ticket(QUEUE_TICKET ticket)
 {//Given ticket, returns pointer to queue requested
 	int index = decrypt_ticket(ticket);	//Get index from the ticket
+	printf("redeemed indes: %d",index);
 	PRIORITY_QUEUE* pQueue = NULL;
 
-	if(index < MAXIMUM_NUMBER_OF_QUEUES	//If index is in valid queue range
-		&& index >= 0)
+	if(index < MAXIMUM_NUMBER_OF_QUEUES	&& index >= 0) //If index is in valid queue range
 		pQueue = queue_guard.queues[index];	//Get queue at index from manager
 	else//DEBUG
 		printf("failed in redeem, outside range\n");
+	
+	/** DEBUGING **/	
 	if(pQueue==NULL)//DEBUG
 		printf("failed in redeem, not found\n");
+		
 	if(pQueue->ticket != ticket)//DEBUG
 		printf("failed in redeem, tickets dont match... queueTicket:%u   providedTicket:%u\n",pQueue->ticket, ticket);
-	if(pQueue != NULL
-		&& pQueue->ticket != ticket)	//If queue wasn't found or ticket didn't match queue's copy
+	/** DEBUGING **/
+	
+		
+	//If queue wasn't found or ticket didn't match queue's copy
+	if(pQueue != NULL && pQueue->ticket != ticket)	
 		pQueue = NULL;					//Setup to return NULL
 
 	return pQueue;
@@ -162,12 +168,14 @@ RESULT delete_queue(QUEUE_TICKET ticket)
 	//if ticket returns a valid queue
 	if(pQueue != NULL)
 	{//Found the queue, delete it
-	
+		
+		free_queue(pQueue);
+		
 		//remove refernce in the array of queues
 		queue_guard.queues[decrypt_ticket(ticket)] = NULL;	//TODO:refactor?
 		queue_guard.size = queue_guard.size - 1; //decrement the size
 		
-		free_queue(pQueue);
+		
 	}
 	else
 		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
