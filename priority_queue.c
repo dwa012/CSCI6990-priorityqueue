@@ -118,8 +118,8 @@ WELCOME_PACKET create_queue()
 		queue_guard.queues[queue_guard.size] = pQueue;
 		queue_guard.size++;		
 	}
-	output.ticket = ticket;
-	return output;
+	outcome.ticket = ticket;
+	return outcome;
 }
 
 RESULT delete_queue(QUEUE_TICKET ticket)
@@ -149,6 +149,7 @@ SIZE_RESULT get_size(QUEUE_TICKET ticket)
 {//Returns the current size of the queue requested
 	SIZE_RESULT outcome;
 	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
+	
 	if(pQueue != NULL)
 	{//Found the queue, get size
 		outcome.size = pQueue->size;
@@ -162,10 +163,10 @@ SIZE_RESULT get_size(QUEUE_TICKET ticket)
 	return outcome;	
 }
 
-RESULT enqueue(ELEMENT item, QUEUE_TICKET token)
+RESULT enqueue(ELEMENT item, QUEUE_TICKET ticket)
 {
 	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
-	NODE* pNode
+	NODE* pNode;
 	RESULT outcome = set_result(SUCCESS,"");
 	if(pQueue == NULL)
 		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
@@ -199,4 +200,24 @@ RESULT enqueue(ELEMENT item, QUEUE_TICKET token)
 	return outcome;
 }
 
-ELEMENT_RESULT dequeue(QUEUE_TICKET token);
+ELEMENT_RESULT dequeue(QUEUE_TICKET ticket){
+	ELEMENT_RESULT the_result;
+	
+	the_result.element = {0,0};
+	
+	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
+	NODE* pNode;
+	RESULT outcome = set_result(SUCCESS,"");
+	
+	if(pQueue == NULL)
+		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
+	else if(pQueue->size == 0)
+		outcome = set_result(QUEUE_IS_EMPTY,"Cannot dequeue from an empty queue");
+	else{
+		EL
+	}
+	
+	the_result.result = outcome;
+		
+
+}

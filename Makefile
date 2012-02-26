@@ -20,7 +20,7 @@ test: priority_queue_test.o
 	g++ -Igtest-1.6.0/include -Lgtest-1.6.0/lib priority_queue_test.o gtest-1.6.0/src/gtest_main.cc -o test -lpthread -lgtest
 
 priority_queue_test.o:
-	g++ -c -Igtest-1.6.0/include -o priority_queue_test.o priority_queue_test.c
+	g++ -w -c -Igtest-1.6.0/include -o priority_queue_test.o priority_queue_test.c
 	
 .PHONY: clean all
 	
