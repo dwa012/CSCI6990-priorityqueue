@@ -7,6 +7,10 @@
 
  #define INDEX_OFFSET 0x1221	//Value for obfuscating index in queue_ticket
  #define START_NONCE 0x0502		//Start value for nonce used in queue_ticket
+ #define TRUE 1
+ #define FALSE 0
+ 
+ typedef char boolean;
  /********** END INTERNAL DEFINES **********/
 
  /************ INTERNAL STRUCTS ************/
