@@ -42,7 +42,7 @@
 	int i;
 	for (i = 0; i < 22; i++){
 		printf("%s\n",banner[i]);
-		system("sleep 1");
+		system("sleep .5");
    }
  }
 void printMenu()
@@ -67,10 +67,10 @@ void run()
 		switch(choice)
 		{
 			case 1:
-				createTask();
+				//createTask();
 				break;
 			case 2:
-				printTask();
+				//printTask();
 				break;
 			case 3:
 				break;
@@ -80,13 +80,8 @@ void run()
 
 int main()
 {
-	run();
+	display_banner();
+	//run();
 	return 1;
 }
- 
- int main(){
-	 display_banner();
-	 return 0;
- }
- 
  
