@@ -18,8 +18,9 @@
  #define TICKET_INVALID				-2
  #define ITEM_INVALID				-3
  #define QUEUE_IS_FULL				-4
- #define QUEUE_IS_EMPTY				-5
- #define QUEUE_CANNOT_BE_CREATED	-6
+ #define QUEUE_IS_NOT_FULL			-5
+ #define QUEUE_IS_EMPTY				-6
+ #define QUEUE_CANNOT_BE_CREATED	-7
 
  typedef unsigned int uint; 
  typedef unsigned long QUEUE_TICKET; //used for the ticket of a queue

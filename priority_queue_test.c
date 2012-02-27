@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-TEST(PRIORITY,CREATE_QUEUE){
+TEST(PRIORITY_QUEUE,CREATE_QUEUE){
 	//~ QUEUE_CANNOT_BE_CREATED
 	//~ SUCCESS
 	
@@ -59,7 +59,7 @@ TEST(PRIORITY,CREATE_QUEUE){
 		delete_queue(wp[i].ticket);
 }
 
-TEST(PRIORITY,DELETE_QUEUE){
+TEST(PRIORITY_QUEUE,DELETE_QUEUE){
 	//~ TICKET_INVALID
 	
 	//try to delete a queue with a forged ticket
@@ -80,7 +80,7 @@ TEST(PRIORITY,DELETE_QUEUE){
 	
 }
 
-TEST(PRIORITY,QUEUE_ENQUEUE){
+TEST(PRIORITY_QUEUE,ENQUEUE){
 	//~ QUEUE_DOES_NOT_EXIST
 	//~ QUEUE_IS_FULL
 	//~ TICKEN_INVLAID
@@ -177,6 +177,7 @@ TEST(PRIORITY_QUEUE,DEQUEUE){
     ELEMENT_RESULT ele_result = dequeue(424234);
 	EXPECT_EQ(ele_result.result.code,TICKET_INVALID);//or does not exist
 	EXPECT_EQ(ele_result.element.item,0);
+	EXPECT_EQ(ele_result.element.priority,0);
 	
 	
 	WELCOME_PACKET packet = create_queue();
@@ -219,30 +220,25 @@ TEST(PRIORITY_QUEUE,FULL){
 	//fill up the queue
 	WELCOME_PACKET packet = create_queue();
 	
-	if(packet.result.code == SUCCESS){
-		for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE-1; i++){
-			ELEMENT e;
-			e.item = i;
-			e.priority = i;
-			enqueue(e,packet.ticket);
-			EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_EMPTY);
-		}
+	//if(packet.result.code == SUCCESS){
 		
-		ELEMENT e;
-		e.item = 3;
-		e.priority = 2331;
-		
-		enqueue(e,packet.ticket);
-		EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
-		
-		enqueue(e,packet.ticket);
-		EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
-		
-		enqueue(e,packet.ticket);
-		EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
-		
+	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE-1; i++){
+		ELEMENT e = {i,i%11};
+		EXPECT_EQ(enqueue(e,packet.ticket).code,SUCCESS);
+		EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_NOT_FULL);
 	}
-	//done filling up queue
+	
+	ELEMENT e = {3,3};		
+	enqueue(e,packet.ticket);
+	
+	EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
+	
+	enqueue(e,packet.ticket);
+	EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
+	
+
+	enqueue(e,packet.ticket);
+	EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
 	
 	//delete the queue then try to get the full status
 	delete_queue(packet.ticket);
@@ -250,7 +246,7 @@ TEST(PRIORITY_QUEUE,FULL){
 	
 }
 
-TEST(PRIORITY,GET_SIZE){
+TEST(PRIORITY_QUEUE,GET_SIZE){
 	//~ SUCCESS
 	//~ TICKET_INVLAID 
 	SIZE_RESULT sr;

@@ -269,6 +269,7 @@ RESULT enqueue(ELEMENT item, QUEUE_TICKET ticket)
 ELEMENT_RESULT dequeue(QUEUE_TICKET ticket)
 {
 	ELEMENT_RESULT outcome; //the result of the dequeue
+	outcome.element = {0,0};
 	outcome.result = set_result(SUCCESS,"");
 	
 	//get the queue represented by the ticket
@@ -283,6 +284,20 @@ ELEMENT_RESULT dequeue(QUEUE_TICKET ticket)
 		outcome.element = remove_one_element(pQueue);
 		
 	return outcome;
+}
+
+RESULT is_full(QUEUE_TICKET ticket){
+	SIZE_RESULT size = get_size(ticket);
+
+	if(size.result.code == SUCCESS)
+	{
+		if(size.size >= MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE)
+			size.result = set_result(QUEUE_IS_FULL,"Queue is full");
+		else
+			size.result = set_result(QUEUE_IS_NOT_FULL,"Queue is not full");
+	}
+
+	return size.result;	
 }
 
 static int find_open_slot(){
