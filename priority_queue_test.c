@@ -15,9 +15,9 @@ TEST(PRIORITY_QUEUE,CREATE_QUEUE){
 	delete_queue(w.ticket);
 	WELCOME_PACKET wp[1024];
 	
-	for(int m = 0; m < 1; m++){
+	for(int m = 0; m < 10; m++){
 
-		for(int j = 0; j < 10; j++){
+		for(int j = 0; j < 100; j++){
 			
 			for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++){
 				wp[i] = create_queue();
@@ -73,7 +73,6 @@ TEST(PRIORITY_QUEUE,DELETE_QUEUE){
 	
 	//delete a queue with a valid ticket
 	r = delete_queue(w.ticket);
-	//printf("ticket: %u \n %s\n",w.ticket,r.message);
 	EXPECT_EQ(r.code, SUCCESS);
 	
 	//try to delete an already deleted queue
