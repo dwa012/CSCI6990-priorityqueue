@@ -13,13 +13,14 @@
  #include <stdlib.h> 
 
  //RESULT defines
- #define SUCCESS					 1
+ #define SUCCESS						 1
  #define OUT_OF_MEMORY				-1
  #define TICKET_INVALID				-2
  #define ITEM_INVALID				-3
  #define QUEUE_IS_FULL				-4
- #define QUEUE_IS_EMPTY				-5
- #define QUEUE_CANNOT_BE_CREATED	-6
+ #define QUEUE_IS_NOT_FULL			-5
+ #define QUEUE_IS_EMPTY				-6
+ #define QUEUE_CANNOT_BE_CREATED	-7
 
  typedef unsigned int uint; 
  typedef unsigned long QUEUE_TICKET; //used for the ticket of a queue
@@ -27,7 +28,7 @@
  //Used for queue items to store the item an priority
  typedef struct queue_element_struct {
  	int item;
- 	int priority;
+ 	uint priority;
  } ELEMENT;
  
  //Used for RESULT messages. Will hold an RESULT message and code
@@ -107,8 +108,8 @@
   * 
   * PRECONDITION:
   * 	item != NULL && item.item != NULL &&
-  * 	item.priority != NULL && item.priority > 0
-  * 	item.priority < 10. item.priority is given as
+  * 	item.priority != NULL && item.priority >= 0
+  * 	item.priority =< 10. item.priority is given as
   * 	0 is least urgent, and 10 is most urgent.
   * 	
   * 	token > 0 and be a valid token for a created
