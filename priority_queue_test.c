@@ -13,9 +13,9 @@ TEST(PRIORITY,CREATE_QUEUE){
 	delete_queue(w.ticket);
 	WELCOME_PACKET wp[1024];
 	
-	for(int m = 0; m < 10; m++){
+	for(int m = 0; m < 1; m++){
 
-		for(int j = 0; j < 1000; j++){
+		for(int j = 0; j < 10; j++){
 			
 			for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++){
 				wp[i] = create_queue();
@@ -120,7 +120,6 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 	
 	r = enqueue(e,packet.ticket);
 	EXPECT_EQ(r.code, ITEM_INVALID);
-	
 	//fill queue	
 	e = {2,4};
 	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
@@ -128,11 +127,11 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 		EXPECT_EQ(get_size(packet.ticket).size,i+1);
 		EXPECT_EQ(r.code, SUCCESS);
 	}
-	
+
 	//add one to many to the queue
 	r = enqueue(e,packet.ticket);
 	EXPECT_EQ(r.code, QUEUE_IS_FULL);
-	
+
 	//delete the queue
 	r = delete_queue(packet.ticket);
 	EXPECT_EQ(r.code,SUCCESS);
@@ -146,6 +145,8 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 	
 	srand(time(NULL));
 	
+	packet = create_queue();
+
 	// fill queue with max elements with random priorities from
 	// [0-10], then compare the insertion number as the base of the
 	// comparision
@@ -163,10 +164,11 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 	
 	for(int i = 1; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){		
 		er = dequeue(packet.ticket);
-		EXPECT_TRUE(last.element.priority <= er.element.priority);
+//	printf("* dequeueTest: ln167   %lu\n",);//DEBUG
+		EXPECT_TRUE(last.element.priority >= er.element.priority);
 		
 		if(last.element.priority == er.element.priority)
-			EXPECT_EQ(last.element.item , er.element.item );
+			EXPECT_TRUE(last.element.item < er.element.item );
 		
 		last = er;
 	}
