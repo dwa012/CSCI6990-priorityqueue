@@ -125,7 +125,7 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 	e = {2,4};
 	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
 		r = enqueue(e,packet.ticket);
-		EXPECT_EQ(get_size(packet.ticket),i+1);
+		EXPECT_EQ(get_size(packet.ticket).size,i+1);
 		EXPECT_EQ(r.code, SUCCESS);
 	}
 	
@@ -139,7 +139,7 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 	
 	//try to enque on a deleted queue
 	r = enqueue(e,packet.ticket);
-	EXPECT_EQ(r.code, QUEUE_DOES_NOT_EXIST);
+	EXPECT_EQ(r.code, TICKET_INVALID);
 	
 	///////////////////////////////////////////////////////////
 	// CHECK FOR THE CORRECT ENQUEUEUING BASED ON PRIORITIES //
@@ -150,9 +150,9 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 	// [0-10], then compare the insertion number as the base of the
 	// comparision
 	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
-		e = {i,rand()%11)};
+		e = { i , rand()%11};
 		r = enqueue(e,packet.ticket);
-		EXPECT_EQ(get_size(packet.ticket),i+1);
+		EXPECT_EQ(get_size(packet.ticket).size,i+1);
 		EXPECT_EQ(r.code, SUCCESS);
 	}
 	
@@ -163,10 +163,10 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 	
 	for(int i = 1; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){		
 		er = dequeue(packet.ticket);
-		EXPECT_TRUE(last.priority <= er.priority);
+		EXPECT_TRUE(last.element.priority <= er.element.priority);
 		
-		if(last.priority == er.priority)
-			EXPECT_EQ(last.element , er.element );
+		if(last.element.priority == er.element.priority)
+			EXPECT_EQ(last.element.item , er.element.item );
 		
 		last = er;
 	}
