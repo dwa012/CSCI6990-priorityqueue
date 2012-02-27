@@ -1,3 +1,18 @@
+ /*
+ * File: priority_queue_test.c
+ * Authors: Jeremy Stormo & Daniel Ward
+ *
+ * This is a test program for the priority_queue.c file.
+ * 
+ * This test progrma uses the Google C++ Framework.
+ * It requires those libraries to work. Since the 
+ * framework is in C++, there are a few C++ syntax elements
+ * in this program.
+ * 
+ * You will have to use g++ or an equivalent to compile this
+ * program.
+ */
+ 
 #include "priority_queue.c"
 #include <limits.h>
 #include "gtest/gtest.h"
@@ -8,14 +23,13 @@
 static ELEMENT fill_element(char * message, int priority);
 
 TEST(PRIORITY_QUEUE,CREATE_QUEUE){
-	//~ QUEUE_CANNOT_BE_CREATED
-	//~ SUCCESS
 	
 	WELCOME_PACKET w = create_queue();
 	delete_queue(w.ticket);
 	WELCOME_PACKET wp[1024];
 	
-	for(int m = 0; m < 10; m++){
+	//this is used to stress the creation and deletion of queues.
+	for(int m = 0; m < 1000; m++){
 
 		for(int j = 0; j < 100; j++){
 			
@@ -62,7 +76,6 @@ TEST(PRIORITY_QUEUE,CREATE_QUEUE){
 }
 
 TEST(PRIORITY_QUEUE,DELETE_QUEUE){
-	//~ TICKET_INVALID
 	
 	//try to delete a queue with a forged ticket
 	RESULT r = delete_queue(23131323);
@@ -82,15 +95,6 @@ TEST(PRIORITY_QUEUE,DELETE_QUEUE){
 }
 
 TEST(PRIORITY_QUEUE,ENQUEUE){
-	//~ QUEUE_DOES_NOT_EXIST
-	//~ QUEUE_IS_FULL
-	//~ TICKEN_INVLAID
-	//~ ITEM_INVALID
-	
-	//~ item != NULL && item.item != NULL &&
-	//~ item.priority != NULL && item.priority > 0
-	//~ item.priority < 10. item.priority is given as
-	//~ 0 is least urgent, and 10 is most urgent.
 	
 	//try a bad ticket numbers
 	ELEMENT e = {"test",9};
@@ -174,9 +178,6 @@ TEST(PRIORITY_QUEUE,ENQUEUE){
 }
 
 TEST(PRIORITY_QUEUE,DEQUEUE){
-	//~ QUEUE_IS_EMPTY
-    //~ SUCCESS
-    //~ TICKET_INVLAID
     ELEMENT_RESULT ele_result = dequeue(424234);
 	EXPECT_EQ(ele_result.result.code,TICKET_INVALID);//or does not exist
 	EXPECT_EQ(strcmp(ele_result.element.item,""),0);
@@ -214,10 +215,6 @@ TEST(PRIORITY_QUEUE,DEQUEUE){
 }
  
 TEST(PRIORITY_QUEUE,FULL){
-	//~ QUEUE_DOES_NOT_EXIST
-	//~ TOKEN_INVLAID 
-	//~ QUEUE_IS_FULL
-	//~ QUEUE_IS_NOT_FULL
 	
 	//try to get the full status of a non existent queue
 	RESULT result = is_full(424234);
@@ -253,8 +250,6 @@ TEST(PRIORITY_QUEUE,FULL){
 }
 
 TEST(PRIORITY_QUEUE,GET_SIZE){
-	//~ SUCCESS
-	//~ TICKET_INVLAID 
 	SIZE_RESULT sr;
 	ELEMENT e = {"test",4};
 	WELCOME_PACKET wp = create_queue();

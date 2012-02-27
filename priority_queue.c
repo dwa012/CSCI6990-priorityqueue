@@ -1,3 +1,12 @@
+ /*
+ * File: priority_queue.c
+ * Authors: Jeremy Stormo & Daniel Ward
+ *
+ * This library provides priority queues. It can serve many queues, it is
+ * defaulted to be able to provide 1024 priority queues.
+ * 
+ * The priority queues are created as a doubly linked list of nodes
+ */
  #include "priority_queue.h"
  #include "stdio.h"
  
@@ -14,21 +23,25 @@
  /********** END INTERNAL DEFINES **********/
 
  /************ INTERNAL STRUCTS ************/
- typedef struct node 
+ //a node for the linked list inside of the queue
+ typedef struct node  
  {
  	struct node* pNext;
 	struct node* pPrev;
 	ELEMENT item;
  } NODE;
  
+ //a queue as a doubly linked list with a pointer to the head and tail
  typedef struct priority_queue 
  {
 	NODE* head;
 	NODE* tail;
 	uint size;
 	QUEUE_TICKET ticket;
- } PRIORITY_QUEUE;
+ } PRIORITY_QUEUE; 
 
+ //a manager to hold an array of pointers to queues
+ //also holds the number of active queues
  typedef struct queue_manager 
  {
 	PRIORITY_QUEUE* queues[MAXIMUM_NUMBER_OF_QUEUES];

@@ -1,6 +1,19 @@
 /*
  * File: app.c
+ * Authors: Jeremy Stormo & Daniel Ward
+ *
+ * This program is a simple todo list application that will
+ * have the user enter a task and the associated priority.
+ * 
+ * The task that will be at the top of the list will always
+ * be the task that is the oldest with the highest priority.
+ * 
+ * This application uses some unix system calls, therefore
+ * it will need to be altered to run on another system.
+ * It also need the timidy application installed and a
+ * midi in the same executing folder to run properly.
  */
+ 
 #include "priority_queue.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,28 +22,28 @@
  
  
  
- char * banner[] = {"\t***********************************************************", 		//1
-								  "\t***********************************************************",
-								  "\t**            )    (         )    (     (    (           **", 
-								  "\t**  *   )  ( /(    )\\ )   ( /(    )\\ )  )\\ ) )\\ )  *   ) **",
-								  "\t**` )  /(  )\\())  (()/(   )\\())  (()/( (()/((()/(` )  /( **", //5
-								  "\t** ( )(_))((_)\\    /(_)) ((_)\\    /(_)) /(_))/(_))( )(_))**",
-								  "\t**(_(_())   ((_)  (_))_    ((_)  (_))  (_)) (_)) (_(_()) **",
-								  "\t**|_   _|  / _ \\   |   \\  / _ \\  | |   |_ _|/ __||_   _| **",
-								  "\t**  | |   | (_) |  | |) || (_) | | |__  | | \\__ \\  | |   **",
-								  "\t**  |_|    \\___/   |___/  \\___/  |____||___||___/  |_|   **", //10
-								  "\t***********************************************************",
-								  "\t***********************************************************",
-								  "\t**    Created by Jerry Stormo and Daniel Ward (c) 2012   **",
-								  "\t***********************************************************",
-								  "\t***********************************************************", 	//15
-								  "\t**            Create a prioritized to do list!           **",
-								  "\t**                                                       **",  
-								  "\t**  “One of the secrets of getting more done is to make  **",
-								  "\t**    a TO DO List every day, keep it visible, and use   **",
-								  "\t**   it as a guide to action as you go through the day.” **",	//20
-								  "\t**               - Jean de La Fontaine                   **",
-								  "\t***********************************************************",};	//22
+char * banner[] =  {"\t***********************************************************", 	//1
+						  "\t***********************************************************",
+						  "\t**            )    (         )    (     (    (           **", 
+						  "\t**  *   )  ( /(    )\\ )   ( /(    )\\ )  )\\ ) )\\ )  *   ) **",
+						  "\t**` )  /(  )\\())  (()/(   )\\())  (()/( (()/((()/(` )  /( **", //5
+						  "\t** ( )(_))((_)\\    /(_)) ((_)\\    /(_)) /(_))/(_))( )(_))**",
+						  "\t**(_(_())   ((_)  (_))_    ((_)  (_))  (_)) (_)) (_(_()) **",
+						  "\t**|_   _|  / _ \\   |   \\  / _ \\  | |   |_ _|/ __||_   _| **",
+						  "\t**  | |   | (_) |  | |) || (_) | | |__  | | \\__ \\  | |   **",
+						  "\t**  |_|    \\___/   |___/  \\___/  |____||___||___/  |_|   **", //10
+						  "\t***********************************************************",
+						  "\t***********************************************************",
+						  "\t**    Created by Jerry Stormo and Daniel Ward (c) 2012   **",
+						  "\t***********************************************************",
+						  "\t***********************************************************", 	//15
+						  "\t**            Create a prioritized to do list!           **",
+						  "\t**                                                       **",  
+						  "\t**  “One of the secrets of getting more done is to make  **",
+						  "\t**    a TO DO List every day, keep it visible, and use   **",
+						  "\t**   it as a guide to action as you go through the day.” **",	//20
+						  "\t**               - Jean de La Fontaine                   **",
+						  "\t***********************************************************",};	//22
 								  
 //Welcome packet contains the ticket for our queue
  WELCOME_PACKET my_queue;
