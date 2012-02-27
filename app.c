@@ -45,7 +45,7 @@
  
  //// TASK PROTOTYPES
  void enter_task(char * task, int priority);
- char * get_task();
+ void get_task();
  int get_number_of_tasks();
  
  //// MUSIC PROTOYPES
@@ -55,13 +55,41 @@
  //// USER ITERACTIPON PROTOTYPES
  int get_menu_choice();
  void create_task();
- void perform_choice(int choice);
+ void perform_choice(int choice); 
+ 
+ void get_task(){
+	 ELEMENT_RESULT output = dequeue(my_queue.ticket);
+	 
+	 system("clear");
+	 display_mini_banner();
+		
+	 if(output.result.code == SUCCESS){
+		 printf("\tYour next task:\n");
+		 printf("\t%s\n",output.element.item);
+	 }
+	 else if(output.result.code == QUEUE_IS_EMPTY)
+		printf("\tYour todo list is empty!!!\n");
+	 else
+		printf("\tCould not get the next task from the queue\n");
+		
+	 // system("sleep 2");
+	 //scanf("%1s");
+	 //getchar();
+	 fgetc(stdin);
+ }
  
  void enter_task(char * task, int priority){
 		ELEMENT element;
 		snprintf(element.item , MAX_STRING_LENGTH -1  ,"%s", task);
 		element.priority = priority;
-		enqueue(element,my_queue.ticket);
+		RESULT output = enqueue(element,my_queue.ticket);
+		
+		if(output.code == SUCCESS)
+			printf("\n\tTask successfully added to the list\n");
+		else
+			printf("\n\tTask was not added to the list\n");
+			
+		system("sleep 1");
  }
  
  void create_task(){
@@ -70,10 +98,11 @@
 		
 	   system("clear");
 		display_mini_banner();
-	   printf("\tPlease enter the task information below\nPriorities are from 0(lowest) to 10(highest)\n");
-	   printf("\t-----------------------------------------------\n");
+	   printf("\n\n\tPlease enter the task information below\n\tPriorities are from 0(lowest) to 10(highest)\n");
+	   printf("\t---------------------------------------------------------\n");
 		printf("\tEnter name of task: ");
 		scanf("%1024s",task);
+		printf("\n");
 		printf("\tEnter priority of task[0-10]: ");
 		scanf("%d",&priority);
 		
@@ -118,7 +147,6 @@ void run()
 	{
 		printMenu();
 		scanf("%d",&choice);
-		printf("%d\n",choice);
 		perform_choice(choice);	
 	}
 }
@@ -130,10 +158,10 @@ void perform_choice(int choice){
 				create_task();
 				break;
 			case 2:
-				//printTask();
+				get_task();
 				break;
 			case 3:
-				printf("LATER DUDE!!!!!!!!!!!!\n");
+				printf("\tLATER DUDE!!!!!!!!!!!!\n");
 				break;
 		}
 }
