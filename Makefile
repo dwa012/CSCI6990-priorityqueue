@@ -4,7 +4,7 @@ CFLAGS=-c -Wall
 all: app lib
 
 # CREATE THE APPLICATION
-app: libpq.a
+app: clean libpq.a
 	$(CC) app.c libpq.a -o app
 
 # CREATE THE LIBRARY
