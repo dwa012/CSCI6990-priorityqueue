@@ -95,16 +95,6 @@ static PRIORITY_QUEUE* redeem_ticket(QUEUE_TICKET ticket)
 	if(index < MAXIMUM_NUMBER_OF_QUEUES	//If index is in valid queue range
 		&& index >= 0)
 		pQueue = queue_guard.queues[index];	//Get queue at index from manager
-	//else//DEBUG
-	//	printf("failed in redeem, outside range\n");
-	/*if(pQueue==NULL)//DEBUG
-	{
-		printf("failed in redeem, not found... index:%d\n",index);
-		printf("...at index, isNULL? %d",pQueue==NULL);
-	}
-	else if(pQueue->ticket != ticket)//DEBUG
-		printf("failed in redeem, tickets dont match... queueTicket:%u   providedTicket:%u\n",pQueue->ticket, ticket);
-	*/
 	if(pQueue != NULL
 		&& pQueue->ticket != ticket)	//If queue wasn't found or ticket didn't match queue's copy
 		pQueue = NULL;					//Setup to return NULL
@@ -122,10 +112,7 @@ WELCOME_PACKET create_queue()
 	int indexFound = find_open_slot();
 		
 	if(indexFound == -1)
-	{
 		outcome.result = set_result(QUEUE_CANNOT_BE_CREATED, "Exceeded maximum number of queues");
-		//printf("create_queue: exceeded max queues, Queue_guard size: %d",queue_guard.size);//DEBUG
-	}
 	
 	if(outcome.result.code == SUCCESS)		//Using outcome's error flag to avoid nested if-else
 	{//Create a ticket
@@ -138,10 +125,7 @@ WELCOME_PACKET create_queue()
 	{//Malloc new queue
 		pQueue = (PRIORITY_QUEUE*) malloc(sizeof(PRIORITY_QUEUE));
 		if(pQueue == NULL)
-		{
 			outcome.result = set_result(OUT_OF_MEMORY, "Failed to allocate memory");
-			//printf("create_queue: Queue malloc failed");//DEBUG
-		}
 	}
 	
 	if(outcome.result.code == SUCCESS)
@@ -167,16 +151,12 @@ RESULT delete_queue(QUEUE_TICKET ticket)
 	if(pQueue != NULL)
 	{	
 		queue_guard.queues[decrypt_ticket(ticket)] = NULL;	//remove refernce in the array of queues
-//("delete_queue: assign null to array properly?... %d\n",redeem_ticket(ticket)==NULL);//DEBUG
 		queue_guard.size = queue_guard.size - 1;	//decrement the size
 		
 		free_queue(pQueue);
 	}
 	else
-	{
 		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
-		//printf("delete_queue: call to redeem returned null pointer");//DEBUG
-	}
 		
 	return outcome;
 }
@@ -201,6 +181,7 @@ SIZE_RESULT get_size(QUEUE_TICKET ticket)
 
 static void insert_node(PRIORITY_QUEUE* pQueue, NODE* pNode)
 {//TODO: refactor
+//	printf("* insert_node: ln204\n");//DEBUG
 	boolean finished = FALSE;
 	if(pQueue->tail == NULL)
 	{//Insert into empty list
@@ -223,8 +204,10 @@ static void insert_node(PRIORITY_QUEUE* pQueue, NODE* pNode)
 			pNode->pPrev = curNode->pPrev;
 			pNode->pNext = curNode;
 
-			//Update prior node's links
-			pNode->pPrev->pNext = pNode;
+			if(pNode->pPrev == NULL)	//Adding to tail of queue
+				pQueue->tail = pNode;	//Update tail
+			else										//Adding inbetween nodes
+				pNode->pPrev->pNext = pNode;	//Update prior node's links
 
 			//Update curNode's links
 			curNode->pPrev = pNode;
@@ -233,7 +216,7 @@ static void insert_node(PRIORITY_QUEUE* pQueue, NODE* pNode)
 		}
 	}
 	if(finished == FALSE)
-	{//Hit end of list, add to end
+	{//Hit end of list, add to head of queue
 		curNode = pQueue->head;	//Add after the curNode
 
 			//Update new node's links
@@ -255,16 +238,15 @@ RESULT enqueue(ELEMENT item, QUEUE_TICKET ticket)
 	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
 	NODE* pNode;
 	RESULT outcome = set_result(SUCCESS,"");
-	
-	printf("item: %d\n",item.item);
-	printf("item priority: %u\n",item.priority);
-	
+
+//	printf("* enqueue: ln259\n");//DEBUG
 	if(pQueue == NULL)
 		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
-	
-	else if(item.priority > 10 )
+	else if(item.priority > 10)
+	{
 		outcome = set_result(ITEM_INVALID,"Priority outside of legal range");
-	
+//		printf("*** enqueue FAIL: Item Invalid\n");//DEBUG
+	}
 	else if(pQueue->size >= MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE)
 		outcome = set_result(QUEUE_IS_FULL,"Cannot add to full queue");
 	
@@ -273,6 +255,7 @@ RESULT enqueue(ELEMENT item, QUEUE_TICKET ticket)
 		pNode = (NODE*)malloc(sizeof(NODE));
 		if(pNode == NULL)
 			outcome = set_result(OUT_OF_MEMORY, "Failed to allocate memory");
+//			printf("* enqueue: ln274\n");//DEBUG
 	}
 
 	if(outcome.code == SUCCESS)
@@ -283,31 +266,23 @@ RESULT enqueue(ELEMENT item, QUEUE_TICKET ticket)
 	return outcome;
 }
 
-ELEMENT_RESULT dequeue(QUEUE_TICKET ticket){
-	ELEMENT_RESULT the_result; //the result of the dequeue
-	
-	//set the element to a zero item, and a 0 priority
-	the_result.element;// = {0,0};
+ELEMENT_RESULT dequeue(QUEUE_TICKET ticket)
+{
+	ELEMENT_RESULT outcome; //the result of the dequeue
+	outcome.result = set_result(SUCCESS,"");
 	
 	//get the queue represented by the ticket
 	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
-	//the result to unclude in the ELEMENT_RESULT being returned
-	RESULT outcome = set_result(SUCCESS,"");
 	
 	if(pQueue == NULL) //if NULL the mark it as an error
-		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
+		outcome.result = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
 	else if(pQueue->size == 0) //if the size is 0 then mark an error
-		outcome = set_result(QUEUE_IS_EMPTY,"Cannot dequeue from an empty queue");
-	else{
-		//if the ticket is valid and the size > 0 thne remove one element
-		the_result.element = remove_one_element(pQueue);
-	}
-	
-	//add the RESULT to the return
-	the_result.result = outcome;
-	
-	return the_result;
-
+		outcome.result = set_result(QUEUE_IS_EMPTY,"Cannot dequeue from an empty queue");
+	else
+		//if the ticket is valid and the size > 0 then remove one element
+		outcome.element = remove_one_element(pQueue);
+		
+	return outcome;
 }
 
 static int find_open_slot(){
@@ -321,20 +296,20 @@ static int find_open_slot(){
 	return result;
 }
 
-static ELEMENT remove_one_element(PRIORITY_QUEUE* pQueue){
-	ELEMENT result =  pQueue->head->item;
+static ELEMENT remove_one_element(PRIORITY_QUEUE* pQueue)
+{
+	ELEMENT result = pQueue->head->item;
 	NODE* temp_node = pQueue->head;
+
 	pQueue->head = pQueue->head->pPrev;
-	
-	if(pQueue->size > 1)
+	if(pQueue->head != NULL)
 		pQueue->head->pNext = NULL;
 	else
 		pQueue->tail = NULL;
 		
-	free(temp_node);
+	free(temp_node);	
 	
 	pQueue->size = pQueue->size - 1;
-	
 	return result;
 }
 
