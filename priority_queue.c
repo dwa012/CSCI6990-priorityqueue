@@ -37,9 +37,10 @@
  static QUEUE_TICKET create_ticket(uint index);
  static void free_queue(PRIORITY_QUEUE* pQueue);
  static int decrypt_ticket(QUEUE_TICKET ticket);
- static ELEMENT remove_one_element(PRIORITY_QUEUE* pQueue);
  static RESULT set_result(int resultCode, char* message);
  static PRIORITY_QUEUE* redeem_ticket(QUEUE_TICKET ticket);
+  static ELEMENT remove_one_element(PRIORITY_QUEUE* pQueue);
+ static void insert_node(PRIORITY_QUEUE* pQueue, NODE* pNode);
  /********** END INTERNAL PROTOTYPES ************/
 
 static uint nonce = START_NONCE;	//Nonce counter for queue ticket creation
@@ -194,10 +195,81 @@ SIZE_RESULT get_size(QUEUE_TICKET ticket)
 	return outcome;	
 }
 
+static void insert_node(PRIORITY_QUEUE* pQueue, NODE* pNode)
+{//TODO: refactor
+	boolean finished = FALSE;
+	if(pQueue->tail == NULL)
+	{//Insert into empty list
+		pQueue->tail = pNode;
+		pQueue->head = pNode;
+		pNode->pNext = NULL;
+		pNode->pPrev = NULL;
+		finished = TRUE;
+	}
+	NODE* curNode = pQueue->tail;
+	while(finished == FALSE
+		&& curNode != NULL)
+	{
+		if(curNode->item.priority < pNode->item.priority)
+			curNode=curNode->pNext;	//Iterate to next node
+		else
+		{//Insert new node before curNode
+
+			//Update new node's links
+			pNode->pPrev = curNode->pPrev;
+			pNode->pNext = curNode;
+
+			//Update prior node's links
+			pNode->pPrev->pNext = pNode;
+
+			//Update curNode's links
+			curNode->pPrev = pNode;
+
+			finished = TRUE;
+		}
+	}
+	if(finished == FALSE)
+	{//Hit end of list, add to end
+		curNode = pQueue->head;	//Add after the curNode
+
+			//Update new node's links
+			pNode->pPrev = curNode;
+			pNode->pNext = NULL;
+
+			//Update curNode's links
+			curNode->pNext = pNode;
+
+			//Update head link
+			pQueue->head = pNode;		
+	}
+
+	pQueue->size += 1;
+}
+
 RESULT enqueue(ELEMENT item, QUEUE_TICKET ticket)
 {
-	RESULT r =  {"",0};
-	return r;
+	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
+	NODE* pNode;
+	RESULT outcome = set_result(SUCCESS,"");
+	if(pQueue == NULL)
+		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
+	else if(item.priority > 10)
+		outcome = set_result(ITEM_INVALID,"Priority outside of legal range");
+	else if(pQueue->size >= MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE)
+		outcome = set_result(QUEUE_IS_FULL,"Cannot add to full queue");
+	else
+	{
+		pNode = (NODE*)malloc(sizeof(NODE));
+		if(pNode == NULL)
+			outcome = set_result(OUT_OF_MEMORY, "Failed to allocate memory");
+	}
+
+	if(outcome.code == SUCCESS)
+	{
+		pNode->item = item;
+		insert_node(pQueue, pNode);
+	}
+	return outcome;
 }
 
 ELEMENT_RESULT dequeue(QUEUE_TICKET ticket){
