@@ -28,7 +28,7 @@ TEST(PRIORITY_QUEUE,CREATE_QUEUE){
 	delete_queue(w.ticket);
 	WELCOME_PACKET wp[1024];
 	
-	//this is used to stress the creation and deletion of queues.
+	//this is used to stress test the creation and deletion of queues.
 	for(int m = 0; m < 1000; m++){
 
 		for(int j = 0; j < 100; j++){

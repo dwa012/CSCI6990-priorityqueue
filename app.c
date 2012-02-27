@@ -108,7 +108,8 @@ char * banner[] =  {"\t*********************************************************
 		
 	   system("clear");
 		display_mini_banner();
-	   printf("\n\n\tPlease enter the task information below\n\tPriorities are from 0(lowest) to 10(highest)\n");
+	   printf("\n\n\tPlease enter the task information below");
+	   printf("\n\tPriorities are from 0(lowest) to 10(highest)\n");
 	   printf("\t---------------------------------------------------------\n");
 		printf("\tEnter name of task: ");
 		scanf("%1024s",task);		//Get description of the task
