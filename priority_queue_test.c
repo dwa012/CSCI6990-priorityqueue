@@ -163,11 +163,10 @@ TEST(PRIORITY_QUEUE,ENQUEUE){
 	
 	for(int i = 1; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){		
 		er = dequeue(packet.ticket);
-//	printf("* dequeueTest: ln167   %lu\n",);//DEBUG
 		EXPECT_TRUE(last.element.priority >= er.element.priority);
 		
 		if(last.element.priority == er.element.priority)
-			EXPECT_TRUE(strcmp(last.element.item,er.element.item) < 0);
+			EXPECT_TRUE(atoi(last.element.item) < atoi(er.element.item));
 		
 		last = er;
 	}
@@ -193,14 +192,16 @@ TEST(PRIORITY_QUEUE,DEQUEUE){
 	char temp[MAX_STRING_LENGTH];
 	
 	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
-		e = fill_element(""+i,4);
+		snprintf(temp,MAX_STRING_LENGTH,"%d",i);
+		e = fill_element(temp,4);
 		enqueue(e,packet.ticket);
 	}
 	
 	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
 		ELEMENT_RESULT item = dequeue(packet.ticket);
 		e = item.element;
-		EXPECT_EQ(e.item, i);
+		snprintf(temp,MAX_STRING_LENGTH,"%d",i);
+		EXPECT_EQ(strcmp(e.item,temp),0);
 	}
 	
 	ELEMENT_RESULT r = dequeue(packet.ticket);
@@ -275,6 +276,8 @@ TEST(PRIORITY_QUEUE,GET_SIZE){
 }
 
 static ELEMENT fill_element(char * message, int priority){
-	ELEMENT e = {message,priority};
+	ELEMENT e;
+	snprintf(e.item,MAX_STRING_LENGTH,"%s",message);
+	e.priority = priority;
 	return e;
 }

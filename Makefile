@@ -1,11 +1,13 @@
 CC=gcc
 CFLAGS=-c -Wall
 
-all: run lib
+all: app lib
 
-run: libpq.a
+# CREATE THE APPLICATION
+app: libpq.a
 	$(CC) app.c libpq.a -o app
-	
+
+# CREATE THE LIBRARY
 lib: libpq.a
 	$(libpq.a)
 	

@@ -269,7 +269,9 @@ RESULT enqueue(ELEMENT item, QUEUE_TICKET ticket)
 ELEMENT_RESULT dequeue(QUEUE_TICKET ticket)
 {
 	ELEMENT_RESULT outcome; //the result of the dequeue
-	//outcome.element = {"",0};  //DEBUG JERRY
+	snprintf(outcome.element.item,MAX_STRING_LENGTH,"");
+	outcome.element.priority = 0;// = {"",0};  //DEBUG JERRY
+	//outcome.element = {NULL,0};
 	outcome.result = set_result(SUCCESS,"");
 	
 	//get the queue represented by the ticket
