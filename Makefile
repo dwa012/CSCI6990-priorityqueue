@@ -4,7 +4,7 @@ CFLAGS=-c -Wall
 all: run lib
 
 run: libpq.a
-	$(CC) run.c libpq.a -o run
+	$(CC) app.c libpq.a -o app
 	
 lib: libpq.a
 	$(libpq.a)
