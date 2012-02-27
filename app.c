@@ -178,10 +178,10 @@ int main()
 {
 	my_queue = create_queue();	
 	if(my_queue.result.code == SUCCESS){
-		//start_music();
-		//display_banner();
+		start_music();
+		display_full_banner();
 		run();
-		//stop_music();
+		stop_music();
 		
 		delete_queue(my_queue.ticket);
 	}
