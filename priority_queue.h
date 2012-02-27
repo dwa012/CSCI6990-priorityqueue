@@ -69,21 +69,24 @@
   * when any queue operations are to be requested.
   *
   * PRECONDITION:
-  *		
+  *		There are still queues to create and allocate
   * POSTCONDITION: 
-  *		The returned value will be the identifier for
-  * 	the created queue. If result == SUCCESS then the
-  * 	queue was successfully created. If result < 0
-  * 	then there was an RESULT creating the queue.
+  * 	 	A welcome packet will be returned. This [packet
+  * 	 	contain a RESULT. In the RESULT it will indicate
+  * 	 	if the creation was a SUCCESS or some error code.
   * 
-  * 	The created queue can only hold 1024 elements.
-  * 	If more elements are added than that then
-  * 	RESULT will contain error information.
+  * 	 	If the creation was a sucess then the welcome 
+  * 	 	packet will contain a valid ticket to use for 
+  * 		performing operations on a queue.
+  * 
+  *   	The created queue can only hold 1024 elements.
+  * 		If more elements are added than that an error
+  * 		will be returned.
   *
   * RESULT CODES:
-  * 	QUEUE_CANNOT_BE_CREATED
-  *	OUT_OF_MEMORY
-  * 	SUCCESS
+  * 		QUEUE_CANNOT_BE_CREATED
+  *		OUT_OF_MEMORY
+  * 		SUCCESS
   ******************************************************/
  WELCOME_PACKET create_queue();
  
@@ -94,17 +97,25 @@
   * given ticket.
   * 
   * PRECONDITION:
-  *		ticket is valid
+  *		ticket is valid for a created and non-deleted 
+  * 		queue.
   * POSTCONDITION: 
-  *		If the ticket is valid and reperesents an existing
-  *		queue, it will be deleted. The ticket is then invalidated
-  *		and RESULT will contain code SUCCESS. 
-  *		If the ticket is invalid, RESULT will contain error
-  *		codes. 
+  *		A RESULT will be returned when this operation
+  * 		completes.
+  * 
+  * 		This RESULT will indicate if the queue that is
+  * 		represented by the ticket was a SUCCESS.
+  * 
+  * 		The only error that this function could return,
+  * 		is if the given ticket is not valid.
+  * 
+  * 		If the RESULT is a SUCCESS then the preivous
+  * 		valid ticket that was given, will no longer be
+  * 		valid.
   *
   * RESULT CODES:
-  *	TICKET_INVALID
-  * 	SUCCESS
+  *		TICKET_INVALID
+  * 		SUCCESS
   ******************************************************/
  RESULT delete_queue(QUEUE_TICKET ticket);
  
@@ -113,31 +124,36 @@
   * by the given ticket.
   * 
   * PRECONDITION:
-  * 	item is a valid item such that it has a priority:
-  * 	item.priority < 10   and  item.priority >= 0
-  *	The queue represented by the ticket must also not 
-  *	be full.
+  * 		The givne ticket be a valid ticket for a created
+  * 		and non-deleted queue.
+  * 
+  * 		The given item is a valid item. item.item must 
+  * 		be 1024 characters or less. 
+  * 		The item's priority >= 0 && < 10
   *
   * POSTCONDITIONS
-  * 	Will add the given item into the sorted priority queue
-  * 	that is represented by the given token, if the
-  * 	given ticket and item are both valid. The queue is sorted
-  *	such that a higher priority (A > B) will be put infront of
-  *	a lower one: 
-  *	(A>B): A is placed before B in queue
+  * 		Will add the given item into the sorted priority 
+  * 		queue that is represented by the given token, 
+  * 		if the given ticket and item are both valid. The 
+  * 		queue is sorted such that a higher priority 
+  * 		(A > B) will be put in front of a lower one: 
+  *		(A > B): A is placed before B in queue
   *
-  *	Also such that if two items are of equal importance,
-  *	they will be placed in order of submittance 
-  *	(first come first serve).
+  *		Also such that if two items are of equal 
+  * 		importance, they will be placed in order of 
+  * 		submittance (first come first serve).
   *
-  * 	A RESULT is generated which will contain any error codes.
+  * 		A RESULT is generated which will indicate the 
+  * 		outcome of the operation. If the item was placed
+  * 		in the queue then the RESULT will be SUCCESS,
+  * 		else a relative error code will be given.
   * 
   * RESULT CODES:
-  * 	SUCCESS
-  * 	QUEUE_IS_FULL
-  * 	TICKET_INVALID
-  * 	ITEM_INVALID
-  * 	OUT_OF_MEMORY
+  * 		SUCCESS
+  * 		QUEUE_IS_FULL
+  * 		TICKET_INVALID
+  * 		ITEM_INVALID
+  * 		OUT_OF_MEMORY
   ******************************************************/
  RESULT enqueue(ELEMENT item, QUEUE_TICKET ticket);
  
@@ -146,21 +162,21 @@
   * represtented by the given ticket.
   * 
   * PRECONDITION:
-  * 	ticket is a valid ticket for a queue and the 
-  *	queue is not empty.
+  * 		ticket is a valid ticket for a queue and the 
+  *		queue is not empty.
   * 
   * POSTCONDITION:
-  * 	Will remove and return the ELEMENT from the 
-  * 	front of the queue represented by the ticket.
+  * 		Will remove and return the ELEMENT from the 
+  * 		front of the queue represented by the ticket.
   * 
-  * 	A RESULT is generated which will contain error codes
-  *	and the ELEMENT returned if the RESULT's code is
-  *	SUCCESS
+  * 		A RESULT is generated which will contain error 
+  * 		codes and the ELEMENT returned if the RESULT's 
+  * 		code is SUCCESS.
   * 
   * RESULT CODES:
-  * 	SUCCESS
-  * 	QUEUE_IS_EMPTY
-  * 	TICKET_INVALID
+  * 		SUCCESS
+  * 		QUEUE_IS_EMPTY
+  * 		TICKET_INVALID
   ******************************************************/
  ELEMENT_RESULT dequeue(QUEUE_TICKET ticket);
  
@@ -168,19 +184,20 @@
   * Check if the queue is full
   * 
   * PRECONDITION:
-  * 	Ticket is a valid ticket representing a queue
+  * 		Ticket is a valid ticket representing a queue
   * 
   * POSTCONDITION:
-  * 	A RESULT is generated which will contain the resulting
-  *	status codes for the operation.
-  * 	If the queue is full, QUEUE_IS_FULL is given, otherwise
-  *	QUEUE_IS_NOT_FULL or an error code is returned
+  * 		A RESULT is generated which will contain the 
+  * 		resulting status codes for the operation.
+  * 
+  * 		If the queue is full, QUEUE_IS_FULL is given, 
+  * 		otherwise QUEUE_IS_NOT_FULL or an error code is 
+  * 		returned.
   * 
   * RESULT CODES:
-  * 	SUCCESS
-  * 	TICKET_INVALID 
-  * 	QUEUE_IS_FULL
-  * 	QUEUE_IS_NOT_FULL
+  * 		TICKET_INVALID 
+  * 		QUEUE_IS_FULL
+  * 		QUEUE_IS_NOT_FULL
   ******************************************************/
  RESULT is_full(QUEUE_TICKET ticket);
  
@@ -188,17 +205,20 @@
   * Check if the size of the queue
   * 
   * PRECONDITION:
-
-  * 	Ticket is a valid ticket representing a queue
+  * 		Ticket is a valid ticket representing a queue
   * 
   * POSTCONDITION:
-  * 	A RESULT is generated which will contain the resulting
-  *	status codes for the operation. If the RESULT code is
-  *	SUCCESS then the data supplied is valid
+  * 		A RESULT is generated which will contain the 
+  * 		resulting status codes for the operation. If 
+  * 		the  RESULT code is SUCCESS then the size will 
+  * 		be provided.
+  * 
+  * 		If an error is given then the size returned will 
+  * 		be 0.
   * 
   * RESULT CODES:
-  * 	SUCCESS
-  * 	TICKET_INVALID
+  * 		SUCCESS
+  * 		TICKET_INVALID
   ******************************************************/
  SIZE_RESULT get_size(QUEUE_TICKET ticket);
  

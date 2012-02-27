@@ -153,7 +153,7 @@ TEST(PRIORITY_QUEUE,ENQUEUE){
 	
 	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
 		snprintf(temp,1024,"%d",i);
-		e = fill_element(temp,rand()%11);
+		e = fill_element(temp,rand()%10);
 		r = enqueue(e,packet.ticket);
 		EXPECT_EQ(get_size(packet.ticket).size,i+1);
 		EXPECT_EQ(r.code, SUCCESS);
@@ -226,7 +226,7 @@ TEST(PRIORITY_QUEUE,FULL){
 	//if(packet.result.code == SUCCESS){
 		
 	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE-1; i++){
-		ELEMENT e = {i,i%11};
+		ELEMENT e = {i,i%10};
 		EXPECT_EQ(enqueue(e,packet.ticket).code,SUCCESS);
 		EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_NOT_FULL);
 	}
