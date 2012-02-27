@@ -27,7 +27,7 @@
  //Used for queue items to store the item an priority
  typedef struct queue_element_struct {
  	int item;
- 	int priority;
+ 	uint priority;
  } ELEMENT;
  
  //Used for RESULT messages. Will hold an RESULT message and code

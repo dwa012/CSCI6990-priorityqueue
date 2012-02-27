@@ -255,12 +255,19 @@ RESULT enqueue(ELEMENT item, QUEUE_TICKET ticket)
 	PRIORITY_QUEUE* pQueue = redeem_ticket(ticket);
 	NODE* pNode;
 	RESULT outcome = set_result(SUCCESS,"");
+	
+	printf("item: %d\n",item.item);
+	printf("item priority: %u\n",item.priority);
+	
 	if(pQueue == NULL)
 		outcome = set_result(TICKET_INVALID,"Provided an invalid queue ticket");
-	else if(item.priority > 10)
+	
+	else if(item.priority > 10 )
 		outcome = set_result(ITEM_INVALID,"Priority outside of legal range");
+	
 	else if(pQueue->size >= MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE)
 		outcome = set_result(QUEUE_IS_FULL,"Cannot add to full queue");
+	
 	else
 	{
 		pNode = (NODE*)malloc(sizeof(NODE));

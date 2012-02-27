@@ -13,9 +13,9 @@ TEST(PRIORITY,CREATE_QUEUE){
 	delete_queue(w.ticket);
 	WELCOME_PACKET wp[1024];
 	
-	for(int m = 0; m < 10; m++){
+	for(int m = 0; m < 1; m++){
 
-		for(int j = 0; j < 1000; j++){
+		for(int j = 0; j < 10; j++){
 			
 			for(int i = 0; i < MAXIMUM_NUMBER_OF_QUEUES ; i++){
 				wp[i] = create_queue();
