@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+static ELEMENT fill_element(char * message, int priority);
+
 TEST(PRIORITY_QUEUE,CREATE_QUEUE){
 	//~ QUEUE_CANNOT_BE_CREATED
 	//~ SUCCESS
@@ -92,7 +94,7 @@ TEST(PRIORITY_QUEUE,ENQUEUE){
 	//~ 0 is least urgent, and 10 is most urgent.
 	
 	//try a bad ticket numbers
-	ELEMENT e = {8,9};
+	ELEMENT e = {"test",9};
 	
 	RESULT r = enqueue(e,-313213);
 	EXPECT_EQ(r.code, TICKET_INVALID);
@@ -104,18 +106,18 @@ TEST(PRIORITY_QUEUE,ENQUEUE){
 	WELCOME_PACKET packet = create_queue();
 		
 	//try bad priority
-	e = {3,-1};
+	e = fill_element("test",-3);
 	
 	r = enqueue(e,packet.ticket);
 	EXPECT_EQ(r.code, ITEM_INVALID);
 	
 	//try bad priority
-	e = {3,11};
+	e = fill_element("test",11);
 	
 	r = enqueue(e,packet.ticket);
 	EXPECT_EQ(r.code, ITEM_INVALID);
 	//fill queue	
-	e = {2,4};
+	e = fill_element("test",4);
 	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
 		r = enqueue(e,packet.ticket);
 		EXPECT_EQ(get_size(packet.ticket).size,i+1);
@@ -144,8 +146,11 @@ TEST(PRIORITY_QUEUE,ENQUEUE){
 	// fill queue with max elements with random priorities from
 	// [0-10], then compare the insertion number as the base of the
 	// comparision
+	char temp[1024];
+	
 	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
-		e = { i , rand()%11};
+		snprintf(temp,1024,"%d",i);
+		e = fill_element(temp,rand()%11);
 		r = enqueue(e,packet.ticket);
 		EXPECT_EQ(get_size(packet.ticket).size,i+1);
 		EXPECT_EQ(r.code, SUCCESS);
@@ -162,7 +167,7 @@ TEST(PRIORITY_QUEUE,ENQUEUE){
 		EXPECT_TRUE(last.element.priority >= er.element.priority);
 		
 		if(last.element.priority == er.element.priority)
-			EXPECT_TRUE(last.element.item < er.element.item );
+			EXPECT_TRUE(strcmp(last.element.item,er.element.item) < 0);
 		
 		last = er;
 	}
@@ -176,7 +181,7 @@ TEST(PRIORITY_QUEUE,DEQUEUE){
     //~ TICKET_INVLAID
     ELEMENT_RESULT ele_result = dequeue(424234);
 	EXPECT_EQ(ele_result.result.code,TICKET_INVALID);//or does not exist
-	EXPECT_EQ(ele_result.element.item,0);
+	EXPECT_EQ(strcmp(ele_result.element.item,""),0);
 	EXPECT_EQ(ele_result.element.priority,0);
 	
 	
@@ -185,9 +190,10 @@ TEST(PRIORITY_QUEUE,DEQUEUE){
 	EXPECT_EQ(ele_result.result.code,QUEUE_IS_EMPTY);
 	
 	ELEMENT e;
+	char temp[MAX_STRING_LENGTH];
 	
 	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
-		e = {i,4};
+		e = fill_element(""+i,4);
 		enqueue(e,packet.ticket);
 	}
 	
@@ -250,7 +256,7 @@ TEST(PRIORITY_QUEUE,GET_SIZE){
 	//~ SUCCESS
 	//~ TICKET_INVLAID 
 	SIZE_RESULT sr;
-	ELEMENT e = {2,4};
+	ELEMENT e = {"test",4};
 	WELCOME_PACKET wp = create_queue();
 	
 	sr = get_size(wp.ticket);
@@ -266,4 +272,9 @@ TEST(PRIORITY_QUEUE,GET_SIZE){
 		EXPECT_EQ(get_size(wp.ticket).size, i-1);
 	}
 	
+}
+
+static ELEMENT fill_element(char * message, int priority){
+	ELEMENT e = {message,priority};
+	return e;
 }
