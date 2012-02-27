@@ -102,13 +102,7 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 	
 	//create a valid queue
 	WELCOME_PACKET packet = create_queue();
-	
-	//~ //try NULL item and priority
-	//~ e = {NULL,NULL};
-	//~ 
-	//~ r = enqueue(e,packet.ticket);
-	//~ EXPECT_EQ(r.code, ITEM_INVALID);
-	
+		
 	//try bad priority
 	e = {3,-1};
 	
@@ -176,104 +170,104 @@ TEST(PRIORITY,QUEUE_ENQUEUE){
 	
 }
 
-//TEST(PRIORITY_QUEUE,DEQUEUE){
-	////~ QUEUE_IS_EMPTY
-    ////~ SUCCESS
-    ////~ TICKET_INVLAID
-    //ELEMENT_RESULT ele_result = dequeue(424234);
-	//EXPECT_EQ(ele_result.result.code,TICKET_INVLAID);//or does not exist
-	//EXPECT_EQ(ele_result.element,NULL);
+TEST(PRIORITY_QUEUE,DEQUEUE){
+	//~ QUEUE_IS_EMPTY
+    //~ SUCCESS
+    //~ TICKET_INVLAID
+    ELEMENT_RESULT ele_result = dequeue(424234);
+	EXPECT_EQ(ele_result.result.code,TICKET_INVALID);//or does not exist
+	EXPECT_EQ(ele_result.element.item,0);
 	
 	
-	//WELCOME_PACKET packet = create_queue();
-	//ele_result = dequeue(packet.ticket);
-	//EXPECT_EQ(ele_result.result.code,QUEUE_IS_EMPTY);
+	WELCOME_PACKET packet = create_queue();
+	ele_result = dequeue(packet.ticket);
+	EXPECT_EQ(ele_result.result.code,QUEUE_IS_EMPTY);
 	
-	//ELEMENT e;
+	ELEMENT e;
 	
-	//for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
-		//e = {i,4};
-		//enqueue(e,packet.ticket);
-	//}
+	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
+		e = {i,4};
+		enqueue(e,packet.ticket);
+	}
 	
-	//for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
-		//ELEMENT_RESULT item = dequeue(packet.ticket);
-		//e = item.element;
-		//EXPECT_EQ(e.item, i);
-	//}
+	for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
+		ELEMENT_RESULT item = dequeue(packet.ticket);
+		e = item.element;
+		EXPECT_EQ(e.item, i);
+	}
 	
-	//ELEMENT_RESULT result = dequeue(packet.ticket);
-	//EXPECT_EQ(result.code,QUEUE_IS_EMPTY);
+	ELEMENT_RESULT r = dequeue(packet.ticket);
+	EXPECT_EQ(r.result.code,QUEUE_IS_EMPTY);
 	
-	//result = delete_queue(packet.ticket);
-	//EXPECT_EQ(result.code,SUCCESS);
+	RESULT res = delete_queue(packet.ticket);
+	EXPECT_EQ(res.code,SUCCESS);
 	
-	//ELEMENT_RESULT result = dequeue(packet.ticket);
-	//EXPECT_EQ(result.code,QUEUE_IS_EMPTY);
-//}
+	ELEMENT_RESULT result = dequeue(packet.ticket);
+	EXPECT_EQ(r.result.code,QUEUE_IS_EMPTY);
+}
  
-//TEST(PRIORITY_QUEUE,FULL){
-	////~ QUEUE_DOES_NOT_EXIST
-	////~ TOKEN_INVLAID 
-	////~ QUEUE_IS_FULL
-	////~ QUEUE_IS_NOT_FULL
+TEST(PRIORITY_QUEUE,FULL){
+	//~ QUEUE_DOES_NOT_EXIST
+	//~ TOKEN_INVLAID 
+	//~ QUEUE_IS_FULL
+	//~ QUEUE_IS_NOT_FULL
 	
-	////try to get the full status of a non existent queue
-	//RESULT result = is_full(424234);
-	//EXPECT_EQ(result.code,TOKEN_INVLAID);
+	//try to get the full status of a non existent queue
+	RESULT result = is_full(424234);
+	EXPECT_EQ(result.code,TICKET_INVALID);
 	
-	////fill up the queue
-	//WELCOME_PACKET packet = create_queue();
+	//fill up the queue
+	WELCOME_PACKET packet = create_queue();
 	
-	//if(packet.result.code == SUCCESS){
-		//for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE-1; i++){
-			//ELEMENT e;
-			//e.item = i;
-			//e.priority = i;
-			//enqueue(e,packet.ticket);
-			//EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_NOT_FULL);
-		//}
+	if(packet.result.code == SUCCESS){
+		for(int i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE-1; i++){
+			ELEMENT e;
+			e.item = i;
+			e.priority = i;
+			enqueue(e,packet.ticket);
+			EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_EMPTY);
+		}
 		
-		//ELEMENT e;
-		//e.item = 3;
-		//e.priority = 2331;
+		ELEMENT e;
+		e.item = 3;
+		e.priority = 2331;
 		
-		//enqueue(e,packet.ticket);
-		//EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
+		enqueue(e,packet.ticket);
+		EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
 		
-		//enqueue(e,packet.ticket);
-		//EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
+		enqueue(e,packet.ticket);
+		EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
 		
-		//enqueue(e,packet.ticket);
-		//EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
+		enqueue(e,packet.ticket);
+		EXPECT_EQ(is_full(packet.ticket).code,QUEUE_IS_FULL);
 		
-	//}
-	////done filling up queue
+	}
+	//done filling up queue
 	
-	////delete the queue then try to get the full status
-	//delete_queue(packet.ticket);
-	//EXPECT_EQ(is_full(packet.ticket).code,QUEUE_DOES_NOT_EXIST);
+	//delete the queue then try to get the full status
+	delete_queue(packet.ticket);
+	EXPECT_EQ(is_full(packet.ticket).code,TICKET_INVALID);
 	
-//}
+}
 
-//TEST(PRIORITY,GET_SIZE){
-	////~ SUCCESS
-	////~ TICKET_INVLAID 
-	//SIZE_RESULT sr;
-	//ELEMENT e = {2,4};
-	//WELCOME_PACKET wp = create_queue();
+TEST(PRIORITY,GET_SIZE){
+	//~ SUCCESS
+	//~ TICKET_INVLAID 
+	SIZE_RESULT sr;
+	ELEMENT e = {2,4};
+	WELCOME_PACKET wp = create_queue();
 	
-	//sr = get_size(wp.ticket);
-	//EXPECT_EQ(sr.size,0);
+	sr = get_size(wp.ticket);
+	EXPECT_EQ(sr.size,0);
 	
-	//for(int i = 1; i <= MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
-		//enqueue(e,wp.ticket);
-		//EXPECT_EQ(get_size(wp.ticket).size, i);
-	//}
+	for(int i = 1; i <= MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i++){
+		enqueue(e,wp.ticket);
+		EXPECT_EQ(get_size(wp.ticket).size, i);
+	}
 	
-	//for(int i = MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i > 0; i--){
-		//dequeue(wp.ticket);
-		//EXPECT_EQ(get_size(wp.ticket).size, i-1);
-	//}
+	for(int i = MAXIMUM_NUMBER_OF_ELEMENTS_IN_A_QUEUE; i > 0; i--){
+		dequeue(wp.ticket);
+		EXPECT_EQ(get_size(wp.ticket).size, i-1);
+	}
 	
-//}
+}
